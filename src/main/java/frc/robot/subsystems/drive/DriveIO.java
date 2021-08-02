@@ -1,9 +1,16 @@
 package frc.robot.subsystems.drive;
 
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+
 /**
  * IO interface for the drive subsystem
  */
 public interface DriveIO {
+    /**
+     * Update method which should be called on every loop cycle
+     */
+    void update();
+
     /**
      * Sets the voltage applied to the drivetrain motors
      * @param leftVolts The voltage to apply to the left motor
@@ -11,9 +18,11 @@ public interface DriveIO {
      */
     void setVoltage(double leftVolts, double rightVolts);
 
-    void getLeftPositionRadians();
-    void getRightPositionRadians();
+    double getLeftPositionRadians();
+    double getRightPositionRadians();
 
-    void getLeftVelocityRadPerSec();
-    void getRightVelocityRadPerSec();
+    double getLeftVelocityRadPerSec();
+    double getRightVelocityRadPerSec();
+
+    Rotation2d getHeading();
 }

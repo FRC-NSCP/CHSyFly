@@ -7,23 +7,45 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.hid.HID;
+import frc.robot.hid.TestHID;
+import frc.robot.subsystems.drive.DriveIOSim;
+import frc.robot.subsystems.drive.DriveSubsystem;
 
 
 public class Robot extends TimedRobot {
     private Command m_autonomousCommand;
 
+    // Subsystem instances
+    private HID hid;
+    private DriveSubsystem drive;
+
+    private RobotCommands commands;
+
+    //
+
     public Robot() {
-        super(0.01); //100 Hz loop rate
+        super(Constants.kDt);
     }
 
     @Override
     public void robotInit() {
-    }
+        if (isSimulation()) {
+            // Simulation mode
+            hid = new TestHID();
+            drive = new DriveSubsystem(new DriveIOSim());
+        } else {
+            // Real robot
+            //TODO
+        }
 
+        commands = new RobotCommands(hid, drive);
+
+        drive.setDefaultCommand(commands.driveOperatorControl);
+    }
 
     @Override
     public void robotPeriodic() {
-
         CommandScheduler.getInstance().run();
     }
 
