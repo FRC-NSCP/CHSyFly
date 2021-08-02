@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.util.Units;
 
 public class Constants {
@@ -19,6 +20,7 @@ public class Constants {
     public static final double kDriveTrackwidthMeters = Units.inchesToMeters(30.472);
     public static final double kDriveEmpTrackwidthMeters = Units.inchesToMeters(30.472);
     public static final double kTrackScrubFactor = kDriveTrackwidthMeters / kDriveEmpTrackwidthMeters;
+    public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(Constants.kDriveEmpTrackwidthMeters);
 
     public static void main(String[] args) {
         System.out.println(kRobotMOI);

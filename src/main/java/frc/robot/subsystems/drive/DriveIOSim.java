@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.system.plant.DCMotor;
 import frc.robot.Constants;
+import frckit.util.GeomUtil;
 
 public class DriveIOSim implements DriveIO {
     DifferentialDrivetrainSim sim = new DifferentialDrivetrainSim(
@@ -60,5 +61,10 @@ public class DriveIOSim implements DriveIO {
     @Override
     public Rotation2d getHeading() {
         return sim.getHeading();
+    }
+
+    @Override
+    public void resetEncodersAndGyro() {
+        sim.setPose(GeomUtil.IDENTITY_POSE);
     }
 }

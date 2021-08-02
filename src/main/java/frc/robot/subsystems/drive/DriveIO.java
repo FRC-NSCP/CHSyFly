@@ -25,4 +25,6 @@ public interface DriveIO {
     double getRightVelocityRadPerSec();
 
     Rotation2d getHeading();
+
+    void resetEncodersAndGyro();
 }

@@ -5,6 +5,9 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.hid.HID;
@@ -16,13 +19,18 @@ import frc.robot.subsystems.drive.DriveSubsystem;
 public class Robot extends TimedRobot {
     private Command m_autonomousCommand;
 
+    private static double timestamp = 0.0;
+
+    public static double getTimestamp() {
+        return timestamp;
+    }
+
     // Subsystem instances
     private HID hid;
     private DriveSubsystem drive;
 
     private RobotCommands commands;
 
-    //
 
     public Robot() {
         super(Constants.kDt);
@@ -46,7 +54,9 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotPeriodic() {
+        timestamp = Timer.getFPGATimestamp();
         CommandScheduler.getInstance().run();
+        System.out.println(RobotState.getInstance().getLatestFieldToVehicle());
     }
 
     @Override
