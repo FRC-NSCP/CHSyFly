@@ -22,6 +22,12 @@ public class Constants {
     public static final double kTrackScrubFactor = kDriveTrackwidthMeters / kDriveEmpTrackwidthMeters;
     public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(Constants.kDriveEmpTrackwidthMeters);
 
+    // Intake constants
+    public static final double kIntakePercent = 0.8;
+    public static final double kSpitOutPercent = -0.8;
+    public static final boolean kIntakeRetracted = false;
+    public static final boolean kIntakeExtended = true;
+
     public static void main(String[] args) {
         System.out.println(kRobotMOI);
     }

@@ -6,14 +6,14 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.hid.HID;
 import frc.robot.hid.TestHID;
 import frc.robot.subsystems.drive.DriveIOSim;
 import frc.robot.subsystems.drive.DriveSubsystem;
+import frc.robot.subsystems.intake.IntakeIOSim;
+import frc.robot.subsystems.intake.IntakeSubsystem;
 
 
 public class Robot extends TimedRobot {
@@ -28,6 +28,7 @@ public class Robot extends TimedRobot {
     // Subsystem instances
     private HID hid;
     private DriveSubsystem drive;
+    private IntakeSubsystem intake;
 
     private RobotCommands commands;
 
@@ -42,12 +43,13 @@ public class Robot extends TimedRobot {
             // Simulation mode
             hid = new TestHID();
             drive = new DriveSubsystem(new DriveIOSim());
+            intake = new IntakeSubsystem(new IntakeIOSim());
         } else {
             // Real robot
             //TODO
         }
 
-        commands = new RobotCommands(hid, drive);
+        commands = new RobotCommands(hid, drive, intake);
 
         drive.setDefaultCommand(commands.driveOperatorControl);
     }
