@@ -33,5 +33,7 @@ public class RobotCommands {
      */
     private void bindHID() {
         hid.togglePositionButton().toggleWhenPressed(runIntakeTeleop);
+        hid.runIntakeButton().whenPressed(runIntakeTeleop);
+        hid.runOuttakeButton().whenPressed(runIntakeTeleop);
     }
 }

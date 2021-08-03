@@ -7,7 +7,7 @@ public interface IntakeIO {
     /**
      * Sets the power applied to the intake motor
      * 
-     * @param intakePower The duty to apply to the intake motor [-1, 1]
+     * @param intakePower Power to apply to the intake motor [-1, 1]
      */
     void setPower(double intakePower);
 

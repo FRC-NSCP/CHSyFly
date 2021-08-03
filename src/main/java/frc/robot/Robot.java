@@ -59,7 +59,6 @@ public class Robot extends TimedRobot {
     public void robotPeriodic() {
         timestamp = Timer.getFPGATimestamp();
         CommandScheduler.getInstance().run();
-        System.out.println(RobotState.getInstance().getLatestFieldToVehicle());
     }
 
     @Override

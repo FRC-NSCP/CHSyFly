@@ -10,9 +10,6 @@ public class IntakeSubsystem extends SubsystemBase {
         this.io = io;
     }
 
-    @Override
-    public void periodic() {}
-
     public void stop() {
         io.setPower(0.0);
     }

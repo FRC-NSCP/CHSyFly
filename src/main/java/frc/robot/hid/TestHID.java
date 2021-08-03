@@ -14,6 +14,7 @@ public class TestHID implements HID {
 
     private final Button inButton = new JoystickButton(testGamepad, 1);
     private final Button outButton = new JoystickButton(testGamepad, 2);
+    private final Button intakeOut = new JoystickButton(testGamepad, 3);
 
     @Override
     public double getDriveTranslation() {
@@ -37,8 +38,7 @@ public class TestHID implements HID {
 
     @Override
     public Button togglePositionButton() {
-        // TODO Auto-generated method stub
-        return null;
+        return intakeOut;
     }
 
 }
