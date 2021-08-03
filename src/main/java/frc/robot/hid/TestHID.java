@@ -11,7 +11,8 @@ import edu.wpi.first.wpilibj2.command.button.Button;
 public class TestHID implements HID {
     private final Joystick testGamepad = new Joystick(0);
 
-    private Button testButton = new Button(() -> testGamepad.getRawButton(1));
+    private Button inButton = new Button(() -> testGamepad.getRawButton(1));
+    private Button outButton = new Button(() -> testGamepad.getRawButton(2));
 
     @Override
     public double getDriveTranslation() {
@@ -24,7 +25,19 @@ public class TestHID implements HID {
     }
 
     @Override
-    public Button getTestButton() {
-        return testButton;
+    public Button runIntakeButton() {
+        return inButton;
     }
+
+    @Override
+    public Button runOuttakeButton() {
+        return outButton;
+    }
+
+    @Override
+    public Button togglePositionButton() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }

@@ -11,9 +11,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     @Override
-    public void periodic() {
-        io.update();
-    }
+    public void periodic() {}
 
     public void stop() {
         io.setPosition(Constants.kIntakeRetracted);
@@ -26,10 +24,6 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public void retractIntake() {
         io.setPosition(Constants.kIntakeRetracted);
-    }
-
-    public void toggleIntake() {
-        io.setPosition(!io.currentPosition());
     }
 
     public void runIntake(double power) {

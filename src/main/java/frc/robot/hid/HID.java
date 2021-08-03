@@ -9,5 +9,7 @@ public interface HID {
     double getDriveTranslation();
     double getDriveRotation();
 
-    Button getTestButton();
+    Button runIntakeButton();
+    Button runOuttakeButton();
+    Button togglePositionButton();
 }

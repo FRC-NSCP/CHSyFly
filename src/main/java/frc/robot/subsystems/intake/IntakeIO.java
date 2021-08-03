@@ -5,11 +5,6 @@ package frc.robot.subsystems.intake;
  */
 public interface IntakeIO {
     /**
-     * Update method which should be called on every loop cycle
-     */
-    void update();
-
-    /**
      * Sets the power applied to the intake motor
      * 
      * @param intakePower The duty to apply to the intake motor [-1, 1]
