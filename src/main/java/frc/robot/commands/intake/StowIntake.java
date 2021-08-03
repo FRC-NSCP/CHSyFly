@@ -5,35 +5,27 @@ import frc.robot.Constants;
 import frc.robot.hid.HID;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 
-public class RunIntakeTeleop extends CommandBase {
+public class StowIntake extends CommandBase {
     private final IntakeSubsystem intake;
-    private final HID hid;
-    
-    public RunIntakeTeleop(IntakeSubsystem intake, HID hid) {
+
+    public StowIntake(IntakeSubsystem intake) {
         this.intake = intake;
-        this.hid = hid;
 
         addRequirements(intake);
     }
 
     @Override
     public void initialize() {
-        intake.extendIntake();
+        intake.retractIntake();
+        intake.stop();
     }
 
     @Override
     public void execute() {
-        if (hid.runIntakeButton().get())
-            intake.runIntake(Constants.kIntakePercent);
-        else if (hid.runOuttakeButton().get())
-            intake.runIntake(Constants.kSpitOutPercent);
-        else
-            intake.stop();
     }
 
     @Override
     public void end(boolean interrupted) {
-        intake.stop();
     }
 
     @Override

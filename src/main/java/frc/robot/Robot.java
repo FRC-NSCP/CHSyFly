@@ -52,6 +52,7 @@ public class Robot extends TimedRobot {
         commands = new RobotCommands(hid, drive, intake);
 
         drive.setDefaultCommand(commands.driveOperatorControl);
+        intake.setDefaultCommand(commands.stowIntake);
     }
 
     @Override

@@ -2,6 +2,7 @@ package frc.robot.hid;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.Button;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
  * Test HID setup, using A logitech Dual Action controller (what I have on hand) to control all functions.
@@ -11,8 +12,8 @@ import edu.wpi.first.wpilibj2.command.button.Button;
 public class TestHID implements HID {
     private final Joystick testGamepad = new Joystick(0);
 
-    private Button inButton = new Button(() -> testGamepad.getRawButton(1));
-    private Button outButton = new Button(() -> testGamepad.getRawButton(2));
+    private final Button inButton = new JoystickButton(testGamepad, 1);
+    private final Button outButton = new JoystickButton(testGamepad, 2);
 
     @Override
     public double getDriveTranslation() {

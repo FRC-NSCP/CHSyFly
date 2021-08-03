@@ -14,7 +14,6 @@ public class IntakeSubsystem extends SubsystemBase {
     public void periodic() {}
 
     public void stop() {
-        io.setPosition(Constants.kIntakeRetracted);
         io.setPower(0.0);
     }
 
