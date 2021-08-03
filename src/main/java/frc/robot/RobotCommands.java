@@ -17,6 +17,7 @@ public class RobotCommands {
     public final RunIntakeTeleop runIntakeTeleop;
 
     public RobotCommands(HID hid, DriveSubsystem drive, IntakeSubsystem intake) {
+        this.hid = hid;
         this.drive = drive;
         this.intake = intake;
 
