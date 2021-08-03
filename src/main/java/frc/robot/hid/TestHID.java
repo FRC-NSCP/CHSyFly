@@ -41,4 +41,14 @@ public class TestHID implements HID {
         return intakeOut;
     }
 
+    @Override
+    public double getLeftClimber() {
+        return testGamepad.getRawAxis(3);
+    }
+
+    @Override
+    public double getRightClimber() {
+        return testGamepad.getRawAxis(4);
+    }
+
 }

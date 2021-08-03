@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.hid.HID;
 import frc.robot.hid.TestHID;
+import frc.robot.subsystems.climb.ClimbIOSim;
+import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.drive.DriveIOSim;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.intake.IntakeIOSim;
@@ -29,6 +31,7 @@ public class Robot extends TimedRobot {
     private HID hid;
     private DriveSubsystem drive;
     private IntakeSubsystem intake;
+    private ClimbSubsystem climb;
 
     private RobotCommands commands;
 
@@ -44,15 +47,17 @@ public class Robot extends TimedRobot {
             hid = new TestHID();
             drive = new DriveSubsystem(new DriveIOSim());
             intake = new IntakeSubsystem(new IntakeIOSim());
+            climb = new ClimbSubsystem(new ClimbIOSim());
         } else {
             // Real robot
             //TODO
         }
 
-        commands = new RobotCommands(hid, drive, intake);
+        commands = new RobotCommands(hid, drive, intake, climb);
 
         drive.setDefaultCommand(commands.driveOperatorControl);
         intake.setDefaultCommand(commands.stowIntake);
+        climb.setDefaultCommand(commands.runClimbers);
     }
 
     @Override

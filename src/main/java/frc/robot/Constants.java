@@ -28,6 +28,11 @@ public class Constants {
     public static final boolean kIntakeRetracted = false;
     public static final boolean kIntakeExtended = true;
 
+    //Climb constants
+    public static final boolean kClimbLock = false;
+    public static final boolean kClimbUnlock = true;
+    public static final double kClimberThreshold = 0.2;
+
     public static void main(String[] args) {
         System.out.println(kRobotMOI);
     }

@@ -8,6 +8,9 @@ import edu.wpi.first.wpilibj2.command.button.Button;
 public interface HID {
     double getDriveTranslation();
     double getDriveRotation();
+    
+    double getLeftClimber();
+    double getRightClimber();
 
     Button runIntakeButton();
     Button runOuttakeButton();

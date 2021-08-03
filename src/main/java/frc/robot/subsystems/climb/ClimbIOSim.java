@@ -1,16 +1,14 @@
 package frc.robot.subsystems.climb;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants;
 
 public class ClimbIOSim implements ClimbIO {
-    boolean locked = true;
-    boolean unlocked = !locked;
-
     boolean leftLockPosition, rightLockPosition;
     double leftPower, rightPower;
 
     public ClimbIOSim() {
-        leftLockPosition = rightLockPosition = locked;
+        leftLockPosition = rightLockPosition = Constants.kClimbLock;
         leftPower = rightPower = 0;
 
         updateDash();
@@ -41,10 +39,13 @@ public class ClimbIOSim implements ClimbIO {
     }
 
     private void updateDash() {
-        String leftStr =  leftLockPosition ? "LOCKED,   " : "Unlocked,   ";
-        String rightStr = rightLockPosition ? "LOCKED" : "Unlocked";
-        SmartDashboard.putString("Climb Locks", "Left: " + leftStr + "Right: " + rightStr);
-        SmartDashboard.putString("Climb Powers", "Left: " + leftPower + ",    Right: " + rightPower);
+        String leftLockStr =  leftLockPosition == Constants.kClimbLock ? "LOCKED,   " : "Unlocked,   ";
+        String rightLockStr = rightLockPosition == Constants.kClimbLock ? "LOCKED" : "Unlocked";
+        SmartDashboard.putString("Climb Locks", "Left: " + leftLockStr + "Right: " + rightLockStr);
+
+        String leftPowerStr = String.format("%.3f", leftPower);
+        String rightPowerStr = String.format("%.3f", rightPower);
+        SmartDashboard.putString("Climb Power", "Left: " + leftPowerStr + ",    Right: " + rightPowerStr);
     }
 
     
