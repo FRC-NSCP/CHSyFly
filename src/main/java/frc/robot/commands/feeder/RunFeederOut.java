@@ -14,11 +14,6 @@ public class RunFeederOut extends CommandBase {
     }
 
     @Override
-    public void initialize() {
-        feeder.stop();
-    }
-
-    @Override
     public void execute() {
         feeder.runAll(Constants.kFeederOutPercent);
     }

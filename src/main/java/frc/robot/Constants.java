@@ -1,8 +1,9 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.util.Units;
-import jdk.internal.jshell.tool.resources.l10n;
 
 public class Constants {
     public static final double kDt = 0.01; // Loop cycle time, in seconds
@@ -38,7 +39,6 @@ public class Constants {
     public static final double kFeederInPercent = 0.7;
     public static final double kFeederOutPercent = -0.7;
 
-    public static void main(String[] args) {
-        System.out.println(kRobotMOI);
-    }
+    //Turret constants
+    public static final Pose2d kVehicleToTurret = new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(180.0));
 }

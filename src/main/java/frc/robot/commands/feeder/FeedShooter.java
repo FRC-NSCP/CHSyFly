@@ -12,11 +12,6 @@ public class FeedShooter extends CommandBase {
     }
 
     @Override
-    public void initialize() {
-        feeder.stop();
-    }
-
-    @Override
     public void execute() {
         feeder.runAll(Constants.kFeederInPercent);
     }

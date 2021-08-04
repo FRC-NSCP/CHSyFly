@@ -2,8 +2,11 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Transform2d;
+import edu.wpi.first.wpilibj.geometry.Twist2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import frc.util.PoseHistory;
+import frckit.physics.state.RigidBodyState2d;
 import frckit.util.GeomUtil;
 
 public class RobotState {
@@ -20,6 +23,7 @@ public class RobotState {
     private final PoseHistory bootToVehicle = new PoseHistory(100);
     private final PoseHistory vehicleToTurret = new PoseHistory(100);
     private ChassisSpeeds vehicleVelocity = new ChassisSpeeds();
+    private double turretVelocityRadPerSec = 0.0;
 
     private Pose2d latestMeasuredFieldToTarget = GeomUtil.IDENTITY_POSE;
 
@@ -47,5 +51,11 @@ public class RobotState {
     public Pose2d getLatestFieldToVehicle() {
         Transform2d bootToVehicle = GeomUtil.poseToTransform(this.bootToVehicle.getLatest().orElseThrow().getPose());
         return fieldToBoot.transformBy(bootToVehicle);
+    }
+
+    public void recordTurretObservations(double timestamp, Rotation2d turretOriginToTurretRotation, double turretVelocityRadPerSec) {
+        Pose2d newVehicleToTurret = Constants.kVehicleToTurret.transformBy(GeomUtil.transformFromRotation(turretOriginToTurretRotation));
+        this.turretVelocityRadPerSec = turretVelocityRadPerSec;
+        vehicleToTurret.insert(timestamp, newVehicleToTurret);
     }
 }
