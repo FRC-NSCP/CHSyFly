@@ -22,10 +22,4 @@ public class RunFeederOut extends CommandBase {
     public void end(boolean interrupted) {
         feeder.stop();
     }
-
-    @Override
-    public boolean isFinished() {
-        return false;
-    }
-    
 }

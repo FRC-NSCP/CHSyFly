@@ -9,11 +9,8 @@ public class RunFeederIn extends CommandBase {
     
     public RunFeederIn(FeederSubsystem feeder) {
         this.feeder = feeder;
-    }
 
-    @Override
-    public void initialize() {
-        feeder.stop();
+        addRequirements(feeder);
     }
 
     @Override
@@ -25,10 +22,4 @@ public class RunFeederIn extends CommandBase {
     public void end(boolean interrupted) {
         feeder.stop();
     }
-
-    @Override
-    public boolean isFinished() {
-        return false;
-    }
-    
 }

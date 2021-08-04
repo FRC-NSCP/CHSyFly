@@ -9,11 +9,8 @@ public class LoadTower extends CommandBase {
 
     public LoadTower(FeederSubsystem feeder) {
         this.feeder = feeder;
-    }
 
-    @Override
-    public void initialize() {
-        feeder.stop();
+        addRequirements(feeder);
     }
 
     @Override
@@ -24,5 +21,9 @@ public class LoadTower extends CommandBase {
             feeder.runFunnel(Constants.kFeederInPercent, Constants.kFeederInPercent);
         }
     }
-    
+
+    @Override
+    public void end(boolean interrupted) {
+        feeder.stop();
+    }
 }

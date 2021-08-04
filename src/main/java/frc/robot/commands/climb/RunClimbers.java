@@ -17,11 +17,6 @@ public class RunClimbers extends CommandBase {
     }
 
     @Override
-    public void initialize() {
-        climb.stop();
-    }
-
-    @Override
     public void execute() {
         double leftPowerValue = hid.getLeftClimber();
         double rightPowerValue = hid.getRightClimber();
@@ -39,10 +34,5 @@ public class RunClimbers extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         climb.stop();
-    }
-
-    @Override
-    public boolean isFinished() {
-        return false;
     }
 }
