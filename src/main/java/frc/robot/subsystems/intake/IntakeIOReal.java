@@ -5,7 +5,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.Solenoid;
 
 public class IntakeIOReal implements IntakeIO {
-    private final Solenoid intakePiston = new Solenoid(0);
+    private final Solenoid intakePiston = new Solenoid(1, 0);
     private final TalonSRX intakeMotor = new TalonSRX(8);
     
     @Override

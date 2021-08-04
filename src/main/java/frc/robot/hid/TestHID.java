@@ -12,8 +12,6 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 public class TestHID implements HID {
     private final Joystick testGamepad = new Joystick(0);
 
-    private final Button inButton = new JoystickButton(testGamepad, 1);
-    private final Button outButton = new JoystickButton(testGamepad, 2);
     private final Button intakeOut = new JoystickButton(testGamepad, 3);
 
     @Override
@@ -26,15 +24,6 @@ public class TestHID implements HID {
         return testGamepad.getRawAxis(2); // Right stick X
     }
 
-    @Override
-    public Button runIntakeButton() {
-        return inButton;
-    }
-
-    @Override
-    public Button runOuttakeButton() {
-        return outButton;
-    }
 
     @Override
     public double getLeftClimber() {

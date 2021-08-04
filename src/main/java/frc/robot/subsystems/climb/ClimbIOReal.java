@@ -6,8 +6,8 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.Solenoid;
 
 public class ClimbIOReal implements ClimbIO {
-    private final Solenoid leftLock = new Solenoid(1);
-    private final Solenoid rightLock = new Solenoid(2);
+    private final Solenoid leftLock = new Solenoid(1, 1);
+    private final Solenoid rightLock = new Solenoid(1, 2);
     private final TalonSRX leftClimber = new TalonSRX(13);
     private final TalonSRX rightClimber = new TalonSRX(14);
 

@@ -1,5 +1,6 @@
 package frc.robot.subsystems.feeder;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class FeederSubsystem extends SubsystemBase {
@@ -7,6 +8,12 @@ public class FeederSubsystem extends SubsystemBase {
 
     public FeederSubsystem(FeederIO io) {
         this.io = io;
+        SmartDashboard.putBoolean("Beam Break", seesBall());
+    }
+    
+    @Override
+    public void periodic() {
+        SmartDashboard.putBoolean("Beam Break", seesBall());
     }
 
     public void runFunnel(double leftPower, double rightPower) {

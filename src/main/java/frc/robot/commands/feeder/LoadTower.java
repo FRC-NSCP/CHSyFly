@@ -17,6 +17,8 @@ public class LoadTower extends CommandBase {
     public void execute() {
         if (!feeder.seesBall())
             feeder.runLower(Constants.kFeederInPercent);
+        else
+            feeder.stop();
     }
 
     @Override

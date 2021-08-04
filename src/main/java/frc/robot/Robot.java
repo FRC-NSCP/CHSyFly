@@ -70,6 +70,7 @@ public class Robot extends TimedRobot {
         drive.setDefaultCommand(commands.driveOperatorControl);
         intake.setDefaultCommand(commands.stowIntake);
         climb.setDefaultCommand(commands.runClimbers);
+        feeder.setDefaultCommand(commands.loadTower);
     }
 
     @Override
