@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class FeederSubsystem extends SubsystemBase {
     private FeederIO io;
-    
+
     public FeederSubsystem(FeederIO io) {
         this.io = io;
     }
@@ -22,13 +22,21 @@ public class FeederSubsystem extends SubsystemBase {
         io.setKicker(kickerPower);
     }
 
+    public void runLower(double power) {
+        runFunnel(power, power);
+        runFeeder(power);
+    }
+
+    public void runAll(double power) {
+        runLower(power);
+        runKicker(power);
+    }
+
     public boolean seesBall() {
         return io.getBeamBreak();
     }
 
     public void stop() {
-        runFunnel(0.0, 0.0);
-        runFeeder(0.0);
-        runKicker(0.0);
+        runAll(0.0);
     }
 }

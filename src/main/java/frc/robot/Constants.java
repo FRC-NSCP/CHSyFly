@@ -2,6 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.util.Units;
+import jdk.internal.jshell.tool.resources.l10n;
 
 public class Constants {
     public static final double kDt = 0.01; // Loop cycle time, in seconds
@@ -32,6 +33,10 @@ public class Constants {
     public static final boolean kClimbLock = false;
     public static final boolean kClimbUnlock = true;
     public static final double kClimberThreshold = 0.2;
+
+    //Feeder constants
+    public static final double kFeederInPercent = 0.7;
+    public static final double kFeederOutPercent = -0.7;
 
     public static void main(String[] args) {
         System.out.println(kRobotMOI);
