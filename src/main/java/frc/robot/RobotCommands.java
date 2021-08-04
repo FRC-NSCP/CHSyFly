@@ -34,7 +34,7 @@ public class RobotCommands {
         this.hid = hid;
         this.drive = drive;
         this.intake = intake;
-        
+
         this.climb = climb;
         this.feeder = feeder;
 
@@ -56,6 +56,6 @@ public class RobotCommands {
     private void bindHID() {
         hid.toggleIntakeButton().toggleWhenPressed(runIntakeTeleop);
         hid.runHopper().whenPressed(loadTower);
-        hid.unJamHopper().whenPressed(feederOut);
+        hid.unJamHopper().whenHeld(feederOut);
     }
 }
