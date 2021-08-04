@@ -12,7 +12,16 @@ public interface HID {
     double getLeftClimber();
     double getRightClimber();
 
-    Button runIntakeButton();
-    Button runOuttakeButton();
-    Button togglePositionButton();
+    boolean runIntakeButton();
+    boolean runOuttakeButton();
+    Button toggleIntakeButton();
+
+    Button centerTurret();
+    Button shootBall();
+    Button startShoot();
+
+    Button revUpShooter();
+
+    Button unJamHopper();
+    Button runHopper();
 }

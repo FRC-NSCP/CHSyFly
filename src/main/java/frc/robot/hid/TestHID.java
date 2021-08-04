@@ -37,11 +37,6 @@ public class TestHID implements HID {
     }
 
     @Override
-    public Button togglePositionButton() {
-        return intakeOut;
-    }
-
-    @Override
     public double getLeftClimber() {
         return testGamepad.getRawAxis(3);
     }
@@ -49,6 +44,59 @@ public class TestHID implements HID {
     @Override
     public double getRightClimber() {
         return testGamepad.getRawAxis(4);
+    }
+
+    @Override
+    public Button toggleIntakeButton() {
+        return intakeOut;
+    }
+
+    @Override
+    public Button shootBall() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public boolean runIntakeButton() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean runOuttakeButton() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public Button centerTurret() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Button startShoot() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Button revUpShooter() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Button unJamHopper() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Button runHopper() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

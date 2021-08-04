@@ -23,9 +23,9 @@ public class RunIntakeTeleop extends CommandBase {
 
     @Override
     public void execute() {
-        if (hid.runIntakeButton().get())
+        if (hid.runIntakeButton())
             intake.runIntake(Constants.kIntakePercent);
-        else if (hid.runOuttakeButton().get())
+        else if (hid.runOuttakeButton())
             intake.runIntake(Constants.kSpitOutPercent);
         else
             intake.stop();

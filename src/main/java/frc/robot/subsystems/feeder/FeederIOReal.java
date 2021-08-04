@@ -3,7 +3,6 @@ package frc.robot.subsystems.feeder;
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -34,7 +33,7 @@ public class FeederIOReal implements FeederIO {
 
     @Override
     public void setFeeder(double power) {
-        feeder.set(TalonSRXControlMode.PercentOutput, power);=
+        feeder.set(TalonSRXControlMode.PercentOutput, power);
     }
 
     @Override
