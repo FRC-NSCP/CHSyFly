@@ -4,13 +4,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 
 public class ClimbIOSim implements ClimbIO {
-    boolean leftLockPosition, rightLockPosition;
-    double leftPower, rightPower;
+    boolean leftLockPosition, rightLockPosition = Constants.kClimbLock;
+    double leftPower, rightPower = 0;
 
     public ClimbIOSim() {
-        leftLockPosition = rightLockPosition = Constants.kClimbLock;
-        leftPower = rightPower = 0;
-
         updateDash();
     }
 

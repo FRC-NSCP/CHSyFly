@@ -1,18 +1,11 @@
 package frc.robot.subsystems.feeder;
 
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class FeederIOSim implements FeederIO {
-    private double leftPower, rightPower, feederPower, kickerPower;
-    private SendableChooser<Boolean> seesBall;
-
-
-    public FeederIOSim() {
-        leftPower = rightPower = feederPower = kickerPower = 0;
-        seesBall.setDefaultOption("No ball detected", false);
-        seesBall.addOption("Ball detected!", true);
-    }
+    private double leftPower, rightPower, feederPower, kickerPower = 0;
+    private DigitalInput beamBreak = new DigitalInput(0);
 
     @Override
     public void setLeftSide(double power) {
@@ -43,7 +36,7 @@ public class FeederIOSim implements FeederIO {
 
     @Override
     public boolean getBeamBreak() {
-        return seesBall.getSelected();
+        return !beamBreak.get();
     }
 
     private void updateDash() {

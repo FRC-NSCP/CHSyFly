@@ -1,17 +1,15 @@
 package frc.robot.subsystems.intake;
 
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants;
 
 public class IntakeIOSim implements IntakeIO {
-    private double intakePower;
-    private boolean intakePosition;
+    private double intakePower = 0.0;
+    private Solenoid intakePiston = new Solenoid(0);
 
     public IntakeIOSim() {
-        intakePower = 0.0;
-        intakePosition = Constants.kIntakeRetracted;
         SmartDashboard.putNumber("Intake Power", intakePower);
-        SmartDashboard.putString("Intake Position", intakePosition ? "Extended" : "Retracted");
+        SmartDashboard.putString("Intake Position", currentPosition() ? "Extended" : "Retracted");
     }
 
     @Override
@@ -22,12 +20,12 @@ public class IntakeIOSim implements IntakeIO {
 
     @Override
     public void setPosition(boolean desiredPosition) {
-        intakePosition = desiredPosition;
-        SmartDashboard.putString("Intake Position", intakePosition ? "Extended" : "Retracted");
+        intakePiston.set(desiredPosition);
+        SmartDashboard.putString("Intake Position", currentPosition() ? "Extended" : "Retracted");
     }
 
     @Override
     public boolean currentPosition() {
-        return intakePosition;
+        return intakePiston.get();
     }
 }

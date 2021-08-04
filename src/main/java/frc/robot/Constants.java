@@ -38,6 +38,7 @@ public class Constants {
     //Feeder constants
     public static final double kFeederInPercent = 0.7;
     public static final double kFeederOutPercent = -0.7;
+    
 
     //Turret constants
     public static final Pose2d kVehicleToTurret = new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(180.0));
