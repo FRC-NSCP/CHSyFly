@@ -3,10 +3,12 @@ package frc.robot.subsystems.drive;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.RobotState;
+import frckit.util.GeomUtil;
 
 public class DriveSubsystem extends SubsystemBase {
     private final DriveIO io;
@@ -46,6 +48,7 @@ public class DriveSubsystem extends SubsystemBase {
         );
 
         RobotState.getInstance().recordOdometryObservations(Robot.getTimestamp(), odometry.getPoseMeters(), velocity);
+        SmartDashboard.putString("FieldToVehicle", GeomUtil.metersToInches(RobotState.getInstance().getLatestFieldToVehicle()).toString());
     }
 
     public void stop() {

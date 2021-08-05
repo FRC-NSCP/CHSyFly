@@ -7,6 +7,8 @@ package frc.robot;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -30,6 +32,8 @@ import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.turret.TurretIOReal;
 import frc.robot.subsystems.turret.TurretIOSim;
 import frc.robot.subsystems.turret.TurretSubsystem;
+import frc.robot.subsystems.vision.VisionSubsystem;
+import frckit.util.GeomUtil;
 
 
 public class Robot extends TimedRobot {
@@ -48,6 +52,7 @@ public class Robot extends TimedRobot {
     private ClimbSubsystem climb;
     private FeederSubsystem feeder;
     private TurretSubsystem turret;
+    private VisionSubsystem vision;
 
     private RobotCommands commands;
 
@@ -75,8 +80,9 @@ public class Robot extends TimedRobot {
             drive = new DriveSubsystem(new DriveIOReal(feederIO.getPigeonTalon()));
             turret = new TurretSubsystem(new TurretIOReal());
         }
+        vision = new VisionSubsystem();
 
-        commands = new RobotCommands(hid, drive, intake, climb, feeder, turret);
+        commands = new RobotCommands(hid, drive, intake, climb, feeder, turret, vision);
 
         //drive.setDefaultCommand(commands.driveOperatorControl);
         //intake.setDefaultCommand(commands.stowIntake);
@@ -84,6 +90,8 @@ public class Robot extends TimedRobot {
         //feeder.setDefaultCommand(commands.loadTower);
 
         turret.setDefaultCommand(commands.stowTurret);
+
+        vision.setDefaultCommand(commands.idleVision);
 
         LiveWindow.disableAllTelemetry(); // Disable telemetry because it eats performance
         NetworkTableInstance.getDefault().setUpdateRate(0.01);
@@ -113,6 +121,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
+        RobotState.getInstance().forceRobotPose(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(180.0)));
         if (m_autonomousCommand != null) {
             m_autonomousCommand.cancel();
         }

@@ -111,4 +111,12 @@ public class TurretSubsystem extends SubsystemBase {
     public void updateAbsoluteControl(double setpoint) {
         controller.updateAbsoluteAngle(setpoint);
     }
+
+    public void startAngleControl() {
+        controller.enterAngle();
+    }
+
+    public void updateAngleControl(Rotation2d angle, double feedVelocityRadPerSec) {
+        controller.updateAngle(angle, feedVelocityRadPerSec);
+    }
 }

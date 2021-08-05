@@ -134,19 +134,13 @@ class TurretController(
     private fun checkLimits(angle: MeasureRadians) = checkLowerLimit(angle) && checkUpperLimit(angle)
 
     //Handles turret wraparound and shortest distance tracking using last known position
-    private fun wrapAngle(targetRotationIn: Rotation2d): MeasureRadians {
-        val targetRotation = Rotation2d(targetRotationIn.radians) //Clamp target to -180..180
+    private fun wrapAngle(targetRotation: Rotation2d): MeasureRadians {
         val currentRotation = Rotation2d(currentPosition.value) //Clamp current position to -180..180
         val delta = currentRotation.unaryMinus().rotateBy(targetRotation) //Solve distance to go
 
         var targetPosition = currentPosition + delta.radians.Radians //Attempt shortest route
-        if (!checkUpperLimit(targetPosition)) {
-            targetPosition = upperLimitAngleAbsolute // Turret cannot rotate more than 360.  Ignore out of range setpoints.
-        }
-        if (!checkLowerLimit(targetPosition)) {
-            targetPosition = lowerLimitAngleAbsolute
-        }
-
+        if (targetPosition > upperLimitAngleAbsolute) targetPosition = upperLimitAngleAbsolute
+        if (targetPosition < lowerLimitAngleAbsolute) targetPosition = lowerLimitAngleAbsolute;
         return targetPosition //This is now guaranteed to be clamped safely
     }
 
@@ -187,7 +181,6 @@ class TurretController(
 
             // Update diagnostics
             setpointPositionRadians = angle.value
-            setpointVelocityRadPerSec = 0.0 // Motion is not profiled
         }
     }
 
@@ -269,6 +262,7 @@ class TurretController(
 
         updateState()
         updateTracking(angleGoal, feedVelocity)
+        setpointVelocityRadPerSec = feedVelocityRadPerSec
     }
 
     fun enterAbsoluteAngle() {

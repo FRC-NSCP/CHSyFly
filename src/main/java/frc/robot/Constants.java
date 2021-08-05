@@ -2,9 +2,11 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Transform2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.util.Units;
+import frckit.util.GeomUtil;
 
 public class Constants {
     public static final double kDt = 0.01; // Loop cycle time, in seconds
@@ -42,11 +44,11 @@ public class Constants {
     
 
     //Turret constants
-    public static final Pose2d kVehicleToTurret = new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(180.0));
+    public static final Pose2d kVehicleToTurret = GeomUtil.inchesToMeters(new Pose2d(-6.25, 0.0, Rotation2d.fromDegrees(180.0)));
     public static final double kTurretKp = 70.0;
     public static final double kTurretKd = 1.0;
-    public static final double kTurretTrackingKp = 0.0;
-    public static final double kTurretTrackingKd = 0.0;
+    public static final double kTurretTrackingKp = 30.0;
+    public static final double kTurretTrackingKd = 0.1;
     public static final double kTurretKs = 0.161;
     public static final double kTurretKv = 1.9;
     public static final double kTurretKa = 0.0139;
@@ -60,4 +62,12 @@ public class Constants {
     public static final double kTurretHomingTimeSec = 0.1;
     public static final double kTurretHomingVelocityThresholdRadPerSec = Math.toRadians(1.0); // 1 deg/s
     public static final double kTurretGearRatio = 217.0 / 18.0;
+    public static final double kTurretLookaheadSeconds = 0.7; // Amount to look ahead to account for vehicle velocity
+
+
+    // Vision constants
+    public static final Rotation2d kVisionHorizontalPlaneToLens = Rotation2d.fromDegrees(29.1);
+    public static final double kVisionLensHeightM = Units.inchesToMeters(21.5);
+    public static final double kVisionGoalHeightM = Units.inchesToMeters(98.0);
+    public static final Pose2d kTurretToCamera = GeomUtil.inchesToMeters(new Pose2d(6.5, 0.0, GeomUtil.IDENTITY_ROTATION));
 }
