@@ -4,10 +4,14 @@
 
 package frc.robot;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.turret.CharacterizeTurret;
 import frc.robot.hid.HID;
 import frc.robot.hid.RealHID;
 import frc.robot.hid.TestHID;
@@ -23,6 +27,9 @@ import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.intake.IntakeIOReal;
 import frc.robot.subsystems.intake.IntakeIOSim;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.turret.TurretIOReal;
+import frc.robot.subsystems.turret.TurretIOSim;
+import frc.robot.subsystems.turret.TurretSubsystem;
 
 
 public class Robot extends TimedRobot {
@@ -40,6 +47,7 @@ public class Robot extends TimedRobot {
     private IntakeSubsystem intake;
     private ClimbSubsystem climb;
     private FeederSubsystem feeder;
+    private TurretSubsystem turret;
 
     private RobotCommands commands;
 
@@ -57,20 +65,28 @@ public class Robot extends TimedRobot {
             intake = new IntakeSubsystem(new IntakeIOSim());
             climb = new ClimbSubsystem(new ClimbIOSim());
             feeder = new FeederSubsystem(new FeederIOSim());
+            turret = new TurretSubsystem(new TurretIOSim());
         } else {
+            FeederIOReal feederIO = new FeederIOReal();
             hid = new RealHID();
-            drive = new DriveSubsystem(new DriveIOReal());
             intake = new IntakeSubsystem(new IntakeIOReal());
             climb = new ClimbSubsystem(new ClimbIOReal());
-            feeder = new FeederSubsystem(new FeederIOReal());
+            feeder = new FeederSubsystem(feederIO);
+            drive = new DriveSubsystem(new DriveIOReal(feederIO.getPigeonTalon()));
+            turret = new TurretSubsystem(new TurretIOReal());
         }
 
-        commands = new RobotCommands(hid, drive, intake, climb, feeder);
+        commands = new RobotCommands(hid, drive, intake, climb, feeder, turret);
 
-        drive.setDefaultCommand(commands.driveOperatorControl);
-        intake.setDefaultCommand(commands.stowIntake);
-        climb.setDefaultCommand(commands.runClimbers);
-        feeder.setDefaultCommand(commands.loadTower);
+        //drive.setDefaultCommand(commands.driveOperatorControl);
+        //intake.setDefaultCommand(commands.stowIntake);
+        //climb.setDefaultCommand(commands.runClimbers);
+        //feeder.setDefaultCommand(commands.loadTower);
+
+        turret.setDefaultCommand(commands.stowTurret);
+
+        LiveWindow.disableAllTelemetry(); // Disable telemetry because it eats performance
+        NetworkTableInstance.getDefault().setUpdateRate(0.01);
     }
 
     @Override

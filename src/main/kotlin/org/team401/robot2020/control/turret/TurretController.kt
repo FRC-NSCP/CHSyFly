@@ -3,9 +3,6 @@ package org.team401.robot2020.control.turret
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward
 import edu.wpi.first.wpilibj.geometry.Rotation2d
 import frckit.util.GeomUtil
-import org.team401.units.measure.Degrees
-import org.team401.units.measure.Radians
-import org.team401.units.measure.RadiansPerSecond
 import org.team401.units.measure.acceleration.angular.MeasureRadiansPerSecondPerSecond
 import org.team401.units.measure.distance.angular.MeasureRadians
 import org.team401.units.measure.time.MeasureSeconds
@@ -14,6 +11,7 @@ import org.team401.util.PIDControllerLite
 import org.team401.util.ProfiledPIDControllerLite
 import org.team401.util.TrapezoidProfileLite
 import org.team401.robot2020.util.getAcceleration
+import org.team401.units.measure.*
 import java.util.function.DoubleConsumer
 import java.util.function.DoubleSupplier
 
@@ -38,10 +36,10 @@ import java.util.function.DoubleSupplier
  * @param rate The rate the controller will be updated at, in seconds
  */
 class TurretController(
-    private val Kp: Double,
-    private val Kd: Double,
-    private val trackingKp: Double,
-    private val trackingKd: Double,
+    Kp: Double,
+    Kd: Double,
+    trackingKp: Double,
+    trackingKd: Double,
 
     private val Ks: Double,
     private val Kv: Double,
@@ -61,17 +59,70 @@ class TurretController(
 
     private val rate: MeasureSeconds
 ) {
+    companion object {
+        /**
+         * Creates a TurretController from Java.  Java code cannot interact with methods
+         * that use inline classes (unit classes) so they are replaced with Double here.
+         */
+        @JvmStatic
+        fun createFromJava(
+            Kp: Double,
+            Kd: Double,
+            trackingKp: Double,
+            trackingKd: Double,
+
+            Ks: Double,
+            Kv: Double,
+            Ka: Double,
+
+            velocityConstraint: Double,
+            accelerationConstraint: Double,
+
+            rapidThresholdDistance: Double,
+
+            lowerLimitAngleAbsolute: Double,
+            upperLimitAngleAbsolute: Double,
+
+            positionRadiansSupplier: DoubleSupplier,
+            velocityRadPerSecSupplier: DoubleSupplier,
+            voltageConsumer: DoubleConsumer,
+
+            rate: Double
+        ) = TurretController(
+            Kp, Kd, trackingKp, trackingKd, Ks, Kv, Ka,
+            velocityConstraint.RadiansPerSecond, accelerationConstraint.RadiansPerSecondPerSecond,
+            rapidThresholdDistance.Radians, lowerLimitAngleAbsolute.Radians, upperLimitAngleAbsolute.Radians,
+            positionRadiansSupplier, velocityRadPerSecSupplier, voltageConsumer, rate.Seconds
+        )
+    }
+
     //Controllers and model
-    private val rapidConstraints = TrapezoidProfileLite.Constraints(velocityConstraint.value, accelerationConstraint.value)
+    private val rapidConstraints =
+        TrapezoidProfileLite.Constraints(velocityConstraint.value, accelerationConstraint.value)
     private val rapidController = ProfiledPIDControllerLite(Kp, 0.0, Kd, rapidConstraints, rate.value)
     private var lastRapidState = TrapezoidProfileLite.State()
     private val holdController = PIDControllerLite(Kp, 0.0, Kd, rate.value)
     private val trackingController = PIDControllerLite(trackingKp, 0.0, trackingKd, rate.value)
     private val model = SimpleMotorFeedforward(Ks, Kv, Ka)
 
+    fun setRapidGains(Kp: Double, Kd: Double) {
+        rapidController.setPID(Kp, 0.0, Kd)
+        holdController.setPID(Kp, 0.0, Kd)
+    }
+
+    fun setTrackingGains(Kp: Double, Kd: Double) {
+        trackingController.setPID(Kp, 0.0, Kd)
+    }
+
     //State info
     private var currentPosition = 0.0.Radians
     private var currentVelocity = 0.0.RadiansPerSecond
+
+    //Status info
+    var setpointPositionRadians = 0.0
+        private set
+    var setpointVelocityRadPerSec = 0.0
+        private set
 
     init {
         rapidController.setTolerance(Double.POSITIVE_INFINITY)
@@ -90,10 +141,10 @@ class TurretController(
 
         var targetPosition = currentPosition + delta.radians.Radians //Attempt shortest route
         if (!checkUpperLimit(targetPosition)) {
-            targetPosition -= 360.0.Degrees.toRadians() //Turret is unsafe in positive, shortest route is reverse
+            targetPosition = upperLimitAngleAbsolute // Turret cannot rotate more than 360.  Ignore out of range setpoints.
         }
         if (!checkLowerLimit(targetPosition)) {
-            targetPosition += 360.0.Degrees.toRadians() //Turret is unsafe in negative, shortest route is forward
+            targetPosition = lowerLimitAngleAbsolute
         }
 
         return targetPosition //This is now guaranteed to be clamped safely
@@ -133,6 +184,10 @@ class TurretController(
             val ffVolts = model.calculate(feedVelocity.value)
 
             voltageConsumer.accept(feedbackVolts + ffVolts)
+
+            // Update diagnostics
+            setpointPositionRadians = angle.value
+            setpointVelocityRadPerSec = 0.0 // Motion is not profiled
         }
     }
 
@@ -151,12 +206,16 @@ class TurretController(
         //Update the rapid
         val feedbackVolts = rapidController.calculate(currentPosition.value, goal.value)
         val ffVolts = model.calculate(
-                rapidController.setpoint.velocity,
-                rapidController.getAcceleration(lastRapidState)
+            rapidController.setpoint.velocity,
+            rapidController.getAcceleration(lastRapidState)
         )
 
         lastRapidState = rapidController.setpoint
         voltageConsumer.accept(feedbackVolts + ffVolts)
+
+        // Update diagnostics
+        setpointPositionRadians = rapidController.setpoint.position
+        setpointVelocityRadPerSec = rapidController.setpoint.velocity
     }
 
     //Hold mode
@@ -186,7 +245,9 @@ class TurretController(
         currentControlMode = ControlMode.Jog
     }
 
-    fun updateJog(rate: MeasureRadiansPerSecond, dt: MeasureSeconds) {
+    fun updateJog(rateRadPerSec: Double, dtSeconds: Double) {
+        val rate = rateRadPerSec.RadiansPerSecond
+        val dt = dtSeconds.Seconds
         if (currentControlMode != ControlMode.Jog) return
 
         updateState()
@@ -202,7 +263,8 @@ class TurretController(
         currentControlMode = ControlMode.Angle
     }
 
-    fun updateAngle(angleGoal: Rotation2d, feedVelocity: MeasureRadiansPerSecond = 0.0.RadiansPerSecond) {
+    @JvmOverloads fun updateAngle(angleGoal: Rotation2d, feedVelocityRadPerSec: Double = 0.0) {
+        val feedVelocity = feedVelocityRadPerSec.RadiansPerSecond
         if (currentControlMode != ControlMode.Angle) return
 
         updateState()
@@ -216,15 +278,20 @@ class TurretController(
         currentControlMode = ControlMode.AbsoluteAngle
     }
 
-    fun updateAbsoluteAngle(angleAbsolute: MeasureRadians) {
+    fun updateAbsoluteAngle(angleAbsoluteRadians: Double) {
+        val angleAbsolute = angleAbsoluteRadians.Radians
         updateState()
         val feedbackVolts = rapidController.calculate(currentPosition.value, angleAbsolute.value)
         val ffVolts = model.calculate(
-                rapidController.setpoint.velocity,
-                rapidController.getAcceleration(lastRapidState)
+            rapidController.setpoint.velocity,
+            rapidController.getAcceleration(lastRapidState)
         )
         lastRapidState = rapidController.setpoint
 
         voltageConsumer.accept(feedbackVolts + ffVolts)
+
+        // Update diagnostics
+        setpointPositionRadians = rapidController.setpoint.position
+        setpointVelocityRadPerSec = rapidController.setpoint.velocity
     }
 }

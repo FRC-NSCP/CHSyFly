@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.wpilibj.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.util.Units;
 
 public class Constants {
@@ -25,8 +26,8 @@ public class Constants {
     public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(Constants.kDriveEmpTrackwidthMeters);
 
     // Intake constants
-    public static final double kIntakePercent = 0.7;
-    public static final double kSpitOutPercent = -0.7;
+    public static final double kIntakePercent = 0.5;
+    public static final double kSpitOutPercent = -0.5;
     public static final boolean kIntakeRetracted = false;
     public static final boolean kIntakeExtended = true;
 
@@ -42,4 +43,21 @@ public class Constants {
 
     //Turret constants
     public static final Pose2d kVehicleToTurret = new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(180.0));
+    public static final double kTurretKp = 70.0;
+    public static final double kTurretKd = 1.0;
+    public static final double kTurretTrackingKp = 0.0;
+    public static final double kTurretTrackingKd = 0.0;
+    public static final double kTurretKs = 0.161;
+    public static final double kTurretKv = 1.9;
+    public static final double kTurretKa = 0.0139;
+    public static final double kTurretVelocityConstraintRadPerSec = 40.0 * (2 * Math.PI / 60.0); // RPM -> rad / s
+    public static final double kTurretAccelConstraintRadPerSecPerSec = kTurretVelocityConstraintRadPerSec * 4; // rad / s / s
+    public static final double kTurretRapidThresholdDistance = Math.toRadians(20.0); // Distance to switch to rapid mode instead of tracking
+    public static final double kTurretLowerLimitAngleAbsoluteRad = Math.toRadians(-50.0);
+    public static final double kTurretUpperLimitAngleAbsoluteRad = Math.toRadians(50.0);
+    public static final double kTurretHardStopAngleAbsoluteRad = Math.toRadians(75.50736247119816 + 2.872443836405518);
+    public static final double kTurretHomingVoltage = 2.0;
+    public static final double kTurretHomingTimeSec = 0.1;
+    public static final double kTurretHomingVelocityThresholdRadPerSec = Math.toRadians(1.0); // 1 deg/s
+    public static final double kTurretGearRatio = 217.0 / 18.0;
 }
