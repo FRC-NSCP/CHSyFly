@@ -55,7 +55,7 @@ public class RobotCommands {
      */
     private void bindHID() {
         hid.toggleIntakeButton().toggleWhenPressed(runIntakeTeleop);
-        hid.runHopper().whenPressed(loadTower);
+        hid.runHopper().whenHeld(feederIn);
         hid.unJamHopper().whenHeld(feederOut);
     }
 }

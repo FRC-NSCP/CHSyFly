@@ -24,12 +24,13 @@ public class StowIntake extends CommandBase {
 
     @Override
     public void execute() {
-        if (hid.runIntakeButton())
-        intake.runIntake(Constants.kIntakePercent);
-    else if (hid.runOuttakeButton())
-        intake.runIntake(Constants.kSpitOutPercent);
-    else
-        intake.stop();
+        if (hid.runIntakeButton()) {
+            intake.runIntake(Constants.kIntakePercent);
+        } else if (hid.runOuttakeButton()) {
+            intake.runIntake(Constants.kSpitOutPercent);
+        } else {
+            intake.stop();
+        }
     }
 
     @Override
