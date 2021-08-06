@@ -59,7 +59,7 @@ public class Constants {
     public static final double kTurretUpperLimitAngleAbsoluteRad = Math.toRadians(50.0);
     public static final double kTurretHardStopAngleAbsoluteRad = Math.toRadians(75.50736247119816 + 2.872443836405518);
     public static final double kTurretHomingVoltage = 2.0;
-    public static final double kTurretHomingTimeSec = 0.1;
+    public static final double kTurretHomingTimeSec = 0.2;
     public static final double kTurretHomingVelocityThresholdRadPerSec = Math.toRadians(1.0); // 1 deg/s
     public static final double kTurretGearRatio = 217.0 / 18.0;
     public static final double kTurretLookaheadSeconds = 0.7; // Amount to look ahead to account for vehicle velocity
@@ -70,4 +70,21 @@ public class Constants {
     public static final double kVisionLensHeightM = Units.inchesToMeters(21.5);
     public static final double kVisionGoalHeightM = Units.inchesToMeters(98.0);
     public static final Pose2d kTurretToCamera = GeomUtil.inchesToMeters(new Pose2d(6.5, 0.0, GeomUtil.IDENTITY_ROTATION));
+
+
+    // Shooter constants
+    public static final double kShooterKs = 0.154;
+    public static final double kShooterKv = 0.0182;
+    public static final double kShooterKa = 0.00151;
+    public static final double kShooterKp = 0.15;
+    public static final double kShooterKd = 15.0;
+    public static final double kShooterSpeed = 5000.0 * (2 * Math.PI / 60.0); // RPM -> rad / s
+    public static final double KShooterAccel = kShooterSpeed; // Get to speed in 1 sec
+    public static final double kHoodHomingVolts = -6.0;
+    public static final double kHoodHomingThreshold = 5.0;
+    public static final double kHoodHomingTime = 0.2;
+    public static final double kHoodMin = 0.0;
+    public static final double kHoodMax = 3.7;
+    public static final double kHoodKp = 1.3;
+    public static final double kHoodKd = 0.0;
 }

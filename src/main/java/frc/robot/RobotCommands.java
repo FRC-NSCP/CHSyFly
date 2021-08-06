@@ -9,6 +9,9 @@ import frc.robot.commands.feeder.RunFeederIn;
 import frc.robot.commands.feeder.RunFeederOut;
 import frc.robot.commands.intake.RunIntakeTeleop;
 import frc.robot.commands.intake.StowIntake;
+import frc.robot.commands.shooter.CharacterizeShooter;
+import frc.robot.commands.shooter.RunShooter;
+import frc.robot.commands.shooter.TuneHood;
 import frc.robot.commands.turret.CharacterizeTurret;
 import frc.robot.commands.turret.StowTurret;
 import frc.robot.commands.turret.TuneTurret;
@@ -20,6 +23,7 @@ import frc.robot.subsystems.climb.ClimbSubsystem;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.turret.TurretSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 
@@ -30,6 +34,7 @@ public class RobotCommands {
     private final ClimbSubsystem climb;
     private final FeederSubsystem feeder;
     private final VisionSubsystem vision;
+    private final ShooterSubsystem shooter;
 
     public final DriveOperatorControl driveOperatorControl;
     public final StowIntake stowIntake;
@@ -48,13 +53,19 @@ public class RobotCommands {
     public final IdleVision idleVision;
     public final RunVisionTracking runVisionTracking;
 
-    public RobotCommands(HID hid, DriveSubsystem drive, IntakeSubsystem intake, ClimbSubsystem climb, FeederSubsystem feeder, TurretSubsystem turret, VisionSubsystem vision) {
+    public final CharacterizeShooter characterizeShooter;
+    public final RunShooter runShooter;
+
+    public final TuneHood tuneHood0, tuneHood1, tuneHood2, tuneHood3;
+
+    public RobotCommands(HID hid, DriveSubsystem drive, IntakeSubsystem intake, ClimbSubsystem climb, FeederSubsystem feeder, TurretSubsystem turret, VisionSubsystem vision, ShooterSubsystem shooter) {
         this.hid = hid;
         this.drive = drive;
         this.intake = intake;
         this.climb = climb;
         this.feeder = feeder;
         this.vision = vision;
+        this.shooter = shooter;
 
         driveOperatorControl = new DriveOperatorControl(drive, hid);
         stowIntake = new StowIntake(intake, hid);
@@ -77,6 +88,20 @@ public class RobotCommands {
         idleVision = new IdleVision(vision);
         runVisionTracking = new RunVisionTracking(vision);
         SmartDashboard.putData("DebugRunVisionTracking", runVisionTracking);
+
+        characterizeShooter = new CharacterizeShooter(shooter);
+        runShooter = new RunShooter(shooter);
+        SmartDashboard.putData("RunShooterDebug", runShooter);
+
+        tuneHood0 = new TuneHood(shooter, 0);
+        tuneHood1 = new TuneHood(shooter, 1);
+        tuneHood2 = new TuneHood(shooter, 2);
+        tuneHood3 = new TuneHood(shooter, 3);
+        SmartDashboard.putData("TuneHood0", tuneHood0);
+        SmartDashboard.putData("TuneHood1", tuneHood1);
+        SmartDashboard.putData("TuneHood2", tuneHood2);
+        SmartDashboard.putData("TuneHood3", tuneHood3);
+
 
         bindHID();
     }

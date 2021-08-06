@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
@@ -29,6 +30,8 @@ import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.intake.IntakeIOReal;
 import frc.robot.subsystems.intake.IntakeIOSim;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.shooter.ShooterIOReal;
+import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.turret.TurretIOReal;
 import frc.robot.subsystems.turret.TurretIOSim;
 import frc.robot.subsystems.turret.TurretSubsystem;
@@ -53,6 +56,7 @@ public class Robot extends TimedRobot {
     private FeederSubsystem feeder;
     private TurretSubsystem turret;
     private VisionSubsystem vision;
+    private ShooterSubsystem shooter;
 
     private RobotCommands commands;
 
@@ -63,6 +67,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotInit() {
+        Threads.setCurrentThreadPriority(true, 99);
+
         if (isSimulation()) {
             // Simulation mode
             hid = new TestHID();
@@ -79,10 +85,11 @@ public class Robot extends TimedRobot {
             feeder = new FeederSubsystem(feederIO);
             drive = new DriveSubsystem(new DriveIOReal(feederIO.getPigeonTalon()));
             turret = new TurretSubsystem(new TurretIOReal());
+            shooter = new ShooterSubsystem(new ShooterIOReal());
         }
         vision = new VisionSubsystem();
 
-        commands = new RobotCommands(hid, drive, intake, climb, feeder, turret, vision);
+        commands = new RobotCommands(hid, drive, intake, climb, feeder, turret, vision, shooter);
 
         //drive.setDefaultCommand(commands.driveOperatorControl);
         //intake.setDefaultCommand(commands.stowIntake);
