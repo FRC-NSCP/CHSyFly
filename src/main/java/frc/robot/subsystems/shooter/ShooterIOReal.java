@@ -14,6 +14,7 @@ public class ShooterIOReal implements ShooterIO {
     private final CANSparkMax hoodSpark = new CANSparkMax(5, CANSparkMaxLowLevel.MotorType.kBrushless);
     private final CANEncoder hoodEncoder = hoodSpark.getEncoder();
     private final CANPIDController hoodPID = hoodSpark.getPIDController();
+    private final CANSparkMax kicker = new CANSparkMax(6, CANSparkMaxLowLevel.MotorType.kBrushless);
 
     public ShooterIOReal() {
         // Set up leader/follower
@@ -30,10 +31,12 @@ public class ShooterIOReal implements ShooterIO {
         hoodSpark.setInverted(true);
         hoodPID.setP(Constants.kHoodKp);
         hoodPID.setD(Constants.kHoodKd);
+
+        kicker.setSmartCurrentLimit(20);
     }
 
     @Override
-    public void setVoltage(double volts) {
+    public void setShooterVoltage(double volts) {
         leader.set(ControlMode.PercentOutput, volts / 12.0);
     }
 
@@ -71,6 +74,11 @@ public class ShooterIOReal implements ShooterIO {
     @Override
     public void setHoodPosition(double position) {
         hoodPID.setReference(position, ControlType.kPosition);
+    }
+
+    @Override
+    public void setKickerPower(double percent) {
+        kicker.set(percent);
     }
 
     @Override

@@ -71,10 +71,10 @@ public class RobotCommands {
         stowIntake = new StowIntake(intake, hid);
         runIntakeTeleop = new RunIntakeTeleop(intake, hid);
         runClimbers = new RunClimbers(climb, hid);
-        feedShooter = new FeedShooter(feeder);
+        feedShooter = new FeedShooter(feeder, shooter);
         loadTower = new LoadTower(feeder);
         feederIn = new RunFeederIn(feeder);
-        feederOut = new RunFeederOut(feeder, hid);
+        feederOut = new RunFeederOut(feeder, shooter, hid);
 
         characterizeTurret = new CharacterizeTurret(turret);
         tuneTurret0 = new TuneTurret(turret, 0.0);
@@ -92,6 +92,7 @@ public class RobotCommands {
         characterizeShooter = new CharacterizeShooter(shooter);
         runShooter = new RunShooter(shooter);
         SmartDashboard.putData("RunShooterDebug", runShooter);
+        SmartDashboard.putData("FeedShooterDebug", feedShooter);
 
         tuneHood0 = new TuneHood(shooter, 0);
         tuneHood1 = new TuneHood(shooter, 1);
@@ -101,6 +102,8 @@ public class RobotCommands {
         SmartDashboard.putData("TuneHood1", tuneHood1);
         SmartDashboard.putData("TuneHood2", tuneHood2);
         SmartDashboard.putData("TuneHood3", tuneHood3);
+
+        SmartDashboard.putData("AimAndRunShooter", runShooter.alongWith(turretTrackTarget, runVisionTracking));
 
 
         bindHID();
@@ -113,6 +116,6 @@ public class RobotCommands {
         hid.toggleIntakeButton().toggleWhenPressed(runIntakeTeleop);
         hid.runHopper().whenHeld(feederIn);
         hid.unJamHopper().whenHeld(feederOut);
-        characterizeTurret.schedule();
+        hid.shootBall().whenHeld(feedShooter);
     }
 }

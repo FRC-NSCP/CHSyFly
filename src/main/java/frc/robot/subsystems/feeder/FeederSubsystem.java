@@ -25,10 +25,6 @@ public class FeederSubsystem extends SubsystemBase {
         io.setFeeder(feederPower);
     }
 
-    public void runKicker(double kickerPower) {
-        io.setKicker(kickerPower);
-    }
-
     public void runLower(double power) {
         runFunnel(power, power);
         runFeeder(power);
@@ -36,7 +32,6 @@ public class FeederSubsystem extends SubsystemBase {
 
     public void runAll(double power) {
         runLower(power);
-        runKicker(power);
     }
 
     public boolean seesBall() {

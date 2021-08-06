@@ -15,10 +15,12 @@ public class LoadTower extends CommandBase {
 
     @Override
     public void execute() {
-        if (!feeder.seesBall())
-            feeder.runLower(Constants.kFeederInPercent);
-        else
+        if (!feeder.seesBall()) {
+            feeder.runFeeder(Constants.kFeederInPercent);
+            feeder.runFunnel(Constants.kHopperLeftPercent, Constants.kHopperRightPercent);
+        } else {
             feeder.stop();
+        }
     }
 
     @Override

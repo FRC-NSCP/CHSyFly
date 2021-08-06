@@ -28,13 +28,6 @@ public class FeederIOSim implements FeederIO {
     }
 
     @Override
-    public void setKicker(double power) {
-        kickerPower = power;
-        updateDash();
-
-    }
-
-    @Override
     public boolean getBeamBreak() {
         return !beamBreak.get();
     }

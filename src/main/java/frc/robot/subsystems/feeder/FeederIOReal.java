@@ -8,7 +8,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DigitalInput;
 
 public class FeederIOReal implements FeederIO {
-    private final CANSparkMax kicker = new CANSparkMax(6, MotorType.kBrushless);
     private final TalonSRX feeder = new TalonSRX(15);
     private final TalonSRX hopperLeft = new TalonSRX(11);
     private final TalonSRX hopperRight  = new TalonSRX(12);
@@ -16,7 +15,6 @@ public class FeederIOReal implements FeederIO {
 
 
     public FeederIOReal() {
-        kicker.setSmartCurrentLimit(20);
         hopperLeft.setInverted(true);
         hopperRight.setInverted(true);
     }
@@ -42,11 +40,6 @@ public class FeederIOReal implements FeederIO {
     @Override
     public void setFeeder(double power) {
         feeder.set(TalonSRXControlMode.PercentOutput, power);
-    }
-
-    @Override
-    public void setKicker(double power) {
-        kicker.set(power);
     }
 
     @Override

@@ -63,16 +63,29 @@ public class ShooterSubsystem extends SubsystemBase {
         return io.getVelocityRadPerSec();
     }
 
-    public void setVoltage(double volts) {
-        io.setVoltage(volts);
+    public void setFlywheelVoltage(double volts) {
+        io.setShooterVoltage(volts);
     }
 
     public void resetProfiler() {
         profiler.resetFromJava(getVelocityRadPerSec());
     }
 
-    public void updateProfiler() {
+    public void runFlywheel() {
+        io.setKickerPower(Constants.kKickerPercent);
         profiler.calculateFromJava(Constants.kDt, Constants.kShooterSpeed);
+        double ffVolts = model.calculate(profiler.getVelocityCommandRadPerSec(), profiler.getAccelCommandRadPerSecPerSec());
+        io.setVelocity(profiler.getVelocityCommandRadPerSec(), ffVolts);
+    }
+
+    public void stop() {
+        io.setHoodVoltage(0);
+        io.setKickerPower(0);
+        io.setShooterVoltage(0);
+    }
+
+    public void updateDejam() {
+        profiler.calculateFromJava(Constants.kDt, Constants.kShooterDejamSpeed);
         double ffVolts = model.calculate(profiler.getVelocityCommandRadPerSec(), profiler.getAccelCommandRadPerSecPerSec());
         io.setVelocity(profiler.getVelocityCommandRadPerSec(), ffVolts);
     }
@@ -97,5 +110,10 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public void setHoodGains(double Kp, double Kd) {
         io.setHoodGains(Kp, Kd);
+    }
+
+    public boolean readyToShoot() {
+        double percent = getVelocityRadPerSec() / Constants.kShooterSpeed;
+        return (percent > (1 - Constants.kShooterReadySpeedPercent) && percent < (1 + Constants.kShooterReadySpeedPercent));
     }
 }

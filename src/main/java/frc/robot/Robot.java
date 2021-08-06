@@ -94,8 +94,8 @@ public class Robot extends TimedRobot {
         //drive.setDefaultCommand(commands.driveOperatorControl);
         //intake.setDefaultCommand(commands.stowIntake);
         //climb.setDefaultCommand(commands.runClimbers);
-        //feeder.setDefaultCommand(commands.loadTower);
-
+        feeder.setDefaultCommand(commands.loadTower);
+        intake.setDefaultCommand(commands.runIntakeTeleop);
         turret.setDefaultCommand(commands.stowTurret);
 
         vision.setDefaultCommand(commands.idleVision);

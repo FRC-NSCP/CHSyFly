@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.util.Units;
 import frckit.util.GeomUtil;
+import org.team401.util.PolynomialRegression;
 
 public class Constants {
     public static final double kDt = 0.01; // Loop cycle time, in seconds
@@ -21,7 +22,7 @@ public class Constants {
 
     // Drive constants
     public static final double kDriveGearRatio = (64.0 / 12.0) * (40.0 / 24.0);
-    public static final double kDriveWheelRadiusMeters = Units.inchesToMeters(3.0);
+    public static final double kDriveWheelRadiusMeters = Units.inchesToMeters(2.9889324420536927806492191837982);
     public static final double kDriveTrackwidthMeters = Units.inchesToMeters(30.472);
     public static final double kDriveEmpTrackwidthMeters = Units.inchesToMeters(30.472);
     public static final double kTrackScrubFactor = kDriveTrackwidthMeters / kDriveEmpTrackwidthMeters;
@@ -39,7 +40,10 @@ public class Constants {
     public static final double kClimberThreshold = 0.2;
 
     //Feeder constants
-    public static final double kFeederInPercent = 0.7;
+    public static final double kKickerPercent = 1.0;
+    public static final double kFeederInPercent = 0.8;
+    public static final double kHopperLeftPercent = 0.5;
+    public static final double kHopperRightPercent = 0.6;
     public static final double kFeederOutPercent = -0.7;
     
 
@@ -78,7 +82,8 @@ public class Constants {
     public static final double kShooterKa = 0.00151;
     public static final double kShooterKp = 0.15;
     public static final double kShooterKd = 15.0;
-    public static final double kShooterSpeed = 5000.0 * (2 * Math.PI / 60.0); // RPM -> rad / s
+    public static final double kShooterSpeed = 4750.0 * (2 * Math.PI / 60.0); // RPM -> rad / s
+    public static final double kShooterDejamSpeed = -1000.0 * (2 * Math.PI / 60.0);
     public static final double KShooterAccel = kShooterSpeed; // Get to speed in 1 sec
     public static final double kHoodHomingVolts = -6.0;
     public static final double kHoodHomingThreshold = 5.0;
@@ -87,4 +92,21 @@ public class Constants {
     public static final double kHoodMax = 3.7;
     public static final double kHoodKp = 1.3;
     public static final double kHoodKd = 0.0;
+    public static final double kShooterReadySpeedPercent = 0.03;
+
+    private static final double shooterOffset = kVehicleToTurret.getX();
+    public static final PolynomialRegression kHoodLut = new PolynomialRegression(
+            new double[][]{
+                    {Units.inchesToMeters(80) + shooterOffset, 2.75},
+                    {Units.inchesToMeters(100) + shooterOffset, 3.2},
+                    {Units.inchesToMeters(120) + shooterOffset, 3.5},
+                    {Units.inchesToMeters(140) + shooterOffset, 3.57},
+                    {Units.inchesToMeters(160) + shooterOffset, 3.55},
+                    {Units.inchesToMeters(180) + shooterOffset, 3.47},
+                    {Units.inchesToMeters(200) + shooterOffset, 3.5},
+                    {Units.inchesToMeters(220) + shooterOffset, 3.6},
+                    {Units.inchesToMeters(240) + shooterOffset, 3.7}
+            },
+            3
+    );
 }

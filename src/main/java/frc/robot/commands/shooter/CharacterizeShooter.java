@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
-import frc.robot.subsystems.turret.TurretSubsystem;
 
 public class CharacterizeShooter extends CommandBase {
     NetworkTableEntry autoSpeedEntry = NetworkTableInstance.getDefault().getEntry("/robot/autospeed");
@@ -47,7 +46,7 @@ public class CharacterizeShooter extends CommandBase {
         priorAutospeed = autospeed;
 
         // command motors to do things
-        shooter.setVoltage(autospeed * 12);
+        shooter.setFlywheelVoltage(autospeed * 12);
 
         // send telemetry data array back to NT
         numberArray[0] = now;
@@ -63,6 +62,6 @@ public class CharacterizeShooter extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        shooter.setVoltage(0);
+        shooter.setFlywheelVoltage(0);
     }
 }
