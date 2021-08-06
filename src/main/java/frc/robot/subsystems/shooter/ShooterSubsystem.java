@@ -49,10 +49,6 @@ public class ShooterSubsystem extends SubsystemBase {
             homeHood.schedule(false);
             return;
         }
-
-        SmartDashboard.putNumber("ShooterVel", getVelocityRadPerSec());
-        SmartDashboard.putNumber("ShooterSet", profiler.getVelocityCommandRadPerSec());
-        SmartDashboard.putNumber("HoodPosition", io.getHoodPosition());
     }
 
     public double getPositionRadians() {

@@ -1,7 +1,11 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.climb.RunClimbers;
+import frc.robot.commands.drive.CharacterizeDrive;
 import frc.robot.commands.drive.DriveOperatorControl;
 import frc.robot.commands.feeder.FeedShooter;
 import frc.robot.commands.feeder.LoadTower;
@@ -26,6 +30,9 @@ import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.turret.TurretSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
+import frckit.util.GeomUtil;
+
+import java.util.List;
 
 public class RobotCommands {
     private final HID hid;
@@ -57,6 +64,10 @@ public class RobotCommands {
     public final RunShooter runShooter;
 
     public final TuneHood tuneHood0, tuneHood1, tuneHood2, tuneHood3;
+
+    public final CharacterizeDrive characterizeDrive;
+
+    public final SequentialCommandGroup driveStraight;
 
     public RobotCommands(HID hid, DriveSubsystem drive, IntakeSubsystem intake, ClimbSubsystem climb, FeederSubsystem feeder, TurretSubsystem turret, VisionSubsystem vision, ShooterSubsystem shooter) {
         this.hid = hid;
@@ -103,8 +114,13 @@ public class RobotCommands {
         SmartDashboard.putData("TuneHood2", tuneHood2);
         SmartDashboard.putData("TuneHood3", tuneHood3);
 
-        SmartDashboard.putData("AimAndRunShooter", runShooter.alongWith(turretTrackTarget, runVisionTracking));
+        //SmartDashboard.putData("AimAndRunShooter", runShooter.alongWith(turretTrackTarget, runVisionTracking));
 
+        characterizeDrive = new CharacterizeDrive(drive);
+
+        driveStraight = drive.createTrajectoryCommand(
+                List.of(GeomUtil.IDENTITY_POSE, GeomUtil.inchesToMeters(new Pose2d(7.0 * 12, -3.0 * 12, GeomUtil.IDENTITY_ROTATION)))
+        ).beforeStarting(() -> RobotState.getInstance().forceRobotPose(GeomUtil.IDENTITY_POSE));
 
         bindHID();
     }

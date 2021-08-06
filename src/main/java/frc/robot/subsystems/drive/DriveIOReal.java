@@ -24,10 +24,6 @@ public class DriveIOReal implements DriveIO {
         leftFollow.follow(leftMain);
         rightFollow.follow(rightMain);
 
-        leftMain.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 10);
-        leftMain.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 10);
-        rightMain.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 10);
-        rightMain.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 10);
         leftMain.setInverted(true);
         imu = new PigeonIMU(pigeonTalon);
     }
@@ -62,8 +58,8 @@ public class DriveIOReal implements DriveIO {
     }
 
     @Override
-    public Rotation2d getHeading() {
-        return Rotation2d.fromDegrees(imu.getFusedHeading());
+    public double getHeadingRadians() {
+        return Math.toRadians(imu.getFusedHeading());
     }
 
     @Override

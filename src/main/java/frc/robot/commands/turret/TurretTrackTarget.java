@@ -2,6 +2,7 @@ package frc.robot.commands.turret;
 
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 import frc.robot.RobotState;
@@ -28,6 +29,7 @@ public class TurretTrackTarget extends CommandBase {
         Rotation2d targetAngle = new Rotation2d(turret.getAbsolutePositionRadians() + params.getTurretError().getRadians());
 
         SmartDashboard.putString("TargetingError", params.getTurretError().toString());
+        SmartDashboard.putNumber("TargetDistance", Units.metersToInches(params.getRangeToTargetM()));
         turret.updateAngleControl(targetAngle, params.getTurretFeedVelRadPerSec());
     }
 

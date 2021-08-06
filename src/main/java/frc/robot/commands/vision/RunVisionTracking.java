@@ -34,7 +34,6 @@ public class RunVisionTracking extends CommandBase {
         if (cameraToTargetOptional.isPresent()) {
             Translation2d cameraToTarget = cameraToTargetOptional.get();
             RobotState.getInstance().recordVisionObservations(Robot.getTimestamp(), cameraToTarget);
-            SmartDashboard.putString("CameraToTarget", GeomUtil.metersToInches(cameraToTarget).toString());
         }
         super.execute();
     }

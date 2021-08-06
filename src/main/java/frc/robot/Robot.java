@@ -67,7 +67,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotInit() {
-        Threads.setCurrentThreadPriority(true, 99);
+        Threads.setCurrentThreadPriority(true, 1);
 
         if (isSimulation()) {
             // Simulation mode
@@ -92,10 +92,10 @@ public class Robot extends TimedRobot {
         commands = new RobotCommands(hid, drive, intake, climb, feeder, turret, vision, shooter);
 
         //drive.setDefaultCommand(commands.driveOperatorControl);
-        //intake.setDefaultCommand(commands.stowIntake);
+        intake.setDefaultCommand(commands.stowIntake);
         //climb.setDefaultCommand(commands.runClimbers);
         feeder.setDefaultCommand(commands.loadTower);
-        intake.setDefaultCommand(commands.runIntakeTeleop);
+        //intake.setDefaultCommand(commands.runIntakeTeleop);
         turret.setDefaultCommand(commands.stowTurret);
 
         vision.setDefaultCommand(commands.idleVision);
@@ -118,6 +118,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
+        commands.driveStraight.schedule();
         if (m_autonomousCommand != null) {
             m_autonomousCommand.schedule();
         }
@@ -128,6 +129,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
+        commands.driveStraight.cancel();
         RobotState.getInstance().forceRobotPose(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(180.0)));
         if (m_autonomousCommand != null) {
             m_autonomousCommand.cancel();

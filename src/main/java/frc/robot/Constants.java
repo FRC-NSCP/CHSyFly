@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Transform2d;
@@ -24,9 +25,15 @@ public class Constants {
     public static final double kDriveGearRatio = (64.0 / 12.0) * (40.0 / 24.0);
     public static final double kDriveWheelRadiusMeters = Units.inchesToMeters(2.9889324420536927806492191837982);
     public static final double kDriveTrackwidthMeters = Units.inchesToMeters(30.472);
-    public static final double kDriveEmpTrackwidthMeters = Units.inchesToMeters(30.472);
+    public static final double kDriveEmpTrackwidthMeters = 0.7804000846764156;
     public static final double kTrackScrubFactor = kDriveTrackwidthMeters / kDriveEmpTrackwidthMeters;
     public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(Constants.kDriveEmpTrackwidthMeters);
+    public static final double kDriveMaxSpeedMPerSec = Units.inchesToMeters(10.0 * 12.0); // 10 ft/s -> in/s -> m/s
+    public static final double kDriveMaxAccelMPerSecPerSec = kDriveMaxSpeedMPerSec * 1;
+
+    public static final double kDriveKs = 0.247;
+    public static final double kDriveKv = 2.4;
+    public static final double kDriveKa = 0.391;
 
     // Intake constants
     public static final double kIntakePercent = 0.5;

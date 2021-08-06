@@ -14,7 +14,6 @@ public class RunShooter extends CommandBase {
         this.shooter = shooter;
 
         addRequirements(shooter);
-        SmartDashboard.putNumber("HoodPosSet", 0.0);
     }
 
     @Override

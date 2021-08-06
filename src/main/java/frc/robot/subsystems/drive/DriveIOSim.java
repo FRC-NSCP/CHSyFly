@@ -58,8 +58,8 @@ public class DriveIOSim implements DriveIO {
     }
 
     @Override
-    public Rotation2d getHeading() {
-        return sim.getHeading();
+    public double getHeadingRadians() {
+        return sim.getHeading().getRadians();
     }
 
     @Override
