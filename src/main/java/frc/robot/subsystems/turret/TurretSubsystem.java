@@ -73,6 +73,9 @@ public class TurretSubsystem extends SubsystemBase {
             return;
         }
         RobotState.getInstance().recordTurretObservations(Robot.getTimestamp(), angle, velocity);
+
+        SmartDashboard.putNumber("TurretVelSet", controller.getSetpointVelocityRadPerSec());
+        SmartDashboard.putNumber("TurretVel", velocity);
     }
 
     public double getAbsolutePositionRadians() {

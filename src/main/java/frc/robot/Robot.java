@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.turret.CharacterizeTurret;
 import frc.robot.hid.HID;
 import frc.robot.hid.RealHID;
@@ -67,7 +68,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotInit() {
-        Threads.setCurrentThreadPriority(true, 1);
+        Threads.setCurrentThreadPriority(true, 50);
 
         if (isSimulation()) {
             // Simulation mode
@@ -111,14 +112,16 @@ public class Robot extends TimedRobot {
     }
 
     @Override
-    public void disabledInit() {}
+    public void disabledInit() {
+        commands.disabledCoastCommand.schedule();
+    }
 
     @Override
     public void disabledPeriodic() {}
 
     @Override
     public void autonomousInit() {
-        commands.driveStraight.schedule();
+        commands.driveStraightTest.schedule();
         if (m_autonomousCommand != null) {
             m_autonomousCommand.schedule();
         }
@@ -129,7 +132,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
-        commands.driveStraight.cancel();
+        commands.driveStraightTest.cancel();
         RobotState.getInstance().forceRobotPose(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(180.0)));
         if (m_autonomousCommand != null) {
             m_autonomousCommand.cancel();

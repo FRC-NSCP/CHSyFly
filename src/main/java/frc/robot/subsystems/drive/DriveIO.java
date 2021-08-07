@@ -18,6 +18,12 @@ public interface DriveIO {
      */
     void setVoltage(double leftVolts, double rightVolts);
 
+    void setVelocity(double leftRadPerSec, double rightRadPerSec, double leftFF, double rightFf);
+
+    void setGains(double Kp, double Kd);
+
+    void setBrake(boolean brake);
+
     double getLeftPositionRadians();
     double getRightPositionRadians();
 

@@ -33,6 +33,21 @@ public class DriveIOSim implements DriveIO {
     }
 
     @Override
+    public void setVelocity(double leftRadPerSec, double rightRadPerSec, double leftFF, double rightFF) {
+        //TODO implement
+    }
+
+    @Override
+    public void setGains(double Kp, double Kd) {
+        //TODO implement
+    }
+
+    @Override
+    public void setBrake(boolean brake) {
+        //TODO implement
+    }
+
+    @Override
     public void setVoltage(double leftVolts, double rightVolts) {
         sim.setInputs(leftVolts, rightVolts);
     }

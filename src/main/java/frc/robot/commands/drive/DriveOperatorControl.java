@@ -17,7 +17,7 @@ public class DriveOperatorControl extends CommandBase {
 
     @Override
     public void initialize() {
-
+        drive.setCoast();
     }
 
     @Override

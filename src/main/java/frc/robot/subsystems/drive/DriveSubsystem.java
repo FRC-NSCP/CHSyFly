@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.RobotState;
+import frc.robot.commands.drive.FollowTrajectoryCommand;
 import frckit.util.GeomUtil;
 
 import java.util.List;
@@ -30,45 +31,6 @@ public class DriveSubsystem extends SubsystemBase {
     private final DriveIO io;
     private final DifferentialDriveOdometry odometry;
     private Rotation2d heading;
-
-    private final SimpleMotorFeedforward model = new SimpleMotorFeedforward(
-            Constants.kDriveKs,
-            Constants.kDriveKv,
-            Constants.kDriveKa
-    );
-
-    private final DifferentialDriveVoltageConstraint voltageConstraint = new DifferentialDriveVoltageConstraint(
-            model, Constants.kDriveKinematics, 10.0
-    );
-
-    private final CentripetalAccelerationConstraint centripetalAccelerationConstraint = new CentripetalAccelerationConstraint(
-            Units.inchesToMeters(120.0)
-    );
-
-    private final TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
-            Constants.kDriveMaxSpeedMPerSec,
-            Constants.kDriveMaxAccelMPerSecPerSec
-    ).setKinematics(Constants.kDriveKinematics).addConstraint(voltageConstraint).addConstraint(centripetalAccelerationConstraint);
-
-    private final PIDController leftPID = new PIDController(3, 0, 0);
-    private final PIDController rightPID = new PIDController(3, 0, 0);
-
-    public Command createTrajectoryCommand(List<Pose2d> waypoints) {
-        RobotState robotState = RobotState.getInstance();
-        Trajectory trajectory = TrajectoryGenerator.generateTrajectory(waypoints, trajectoryConfig);
-        return new RamseteCommand(
-                trajectory,
-                robotState::getLatestFieldToVehicle,
-                new RamseteController(),
-                model,
-                Constants.kDriveKinematics,
-                this::getWheelSpeeds,
-                leftPID,
-                rightPID,
-                this::setVoltage,
-                this
-        ).andThen(this::stop);
-    }
 
     public DriveSubsystem(DriveIO io) {
         this.io = io;
@@ -125,21 +87,11 @@ public class DriveSubsystem extends SubsystemBase {
         SmartDashboard.putString("FieldToVehicle", GeomUtil.metersToInches(RobotState.getInstance().getLatestFieldToVehicle()).toString());
         SmartDashboard.putNumber("DriveLeftVeL", getLeftVelocityMetersPerSec());
         SmartDashboard.putNumber("DriveRightVel", getRightVelocityMetersPerSec());
-        SmartDashboard.putNumber("RamLeftSet", leftPID.getSetpoint());
-        SmartDashboard.putNumber("RamRightSet", rightPID.getSetpoint());
+
     }
 
     public void stop() {
         io.setVoltage(0, 0);
-    }
-
-    public void setSpeeds(double left, double right) {
-        double ffVoltsLeft = model.calculate(left);
-        double ffVoltsRight = model.calculate(right);
-        setVoltage(
-                leftPID.calculate(getLeftVelocityMetersPerSec(), left) + ffVoltsLeft,
-                rightPID.calculate(getRightVelocityMetersPerSec(), right) + ffVoltsRight
-        );
     }
 
     public void setPercentOut(double left, double right) {
@@ -147,5 +99,25 @@ public class DriveSubsystem extends SubsystemBase {
     }
     public void setVoltage(double left, double right) {
         io.setVoltage(left, right);
+    }
+
+    public void setVelocity(double left, double right, double leftFF, double rightFF) {
+        double leftRadPerSec = left / Constants.kDriveWheelRadiusMeters;
+        double rightRadPerSec = right / Constants.kDriveWheelRadiusMeters;
+        SmartDashboard.putNumber("RamLeftSet", left);
+        SmartDashboard.putNumber("RamRightSet", right);
+        io.setVelocity(leftRadPerSec, rightRadPerSec, leftFF, rightFF);
+    }
+
+    public void setGains(double Kp, double Kd) {
+        io.setGains(Kp, Kd);
+    }
+
+    public void setBrake() {
+        io.setBrake(true);
+    }
+
+    public void setCoast() {
+        io.setBrake(false);
     }
 }

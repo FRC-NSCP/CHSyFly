@@ -6,12 +6,15 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Transform2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
+import edu.wpi.first.wpilibj.trajectory.constraint.CentripetalAccelerationConstraint;
+import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.util.Units;
 import frckit.util.GeomUtil;
 import org.team401.util.PolynomialRegression;
 
 public class Constants {
-    public static final double kDt = 0.01; // Loop cycle time, in seconds
+    public static final double kDt = 0.02; // Loop cycle time, in seconds
 
     // Robot geomertry
     // Length and width of robot (bumper to bumper)
@@ -29,11 +32,32 @@ public class Constants {
     public static final double kTrackScrubFactor = kDriveTrackwidthMeters / kDriveEmpTrackwidthMeters;
     public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(Constants.kDriveEmpTrackwidthMeters);
     public static final double kDriveMaxSpeedMPerSec = Units.inchesToMeters(10.0 * 12.0); // 10 ft/s -> in/s -> m/s
-    public static final double kDriveMaxAccelMPerSecPerSec = kDriveMaxSpeedMPerSec * 1;
+    public static final double kDriveMaxAccelMPerSecPerSec = kDriveMaxSpeedMPerSec * 0.5;
 
     public static final double kDriveKs = 0.247;
     public static final double kDriveKv = 2.4;
     public static final double kDriveKa = 0.391;
+
+    public static final double kDriveKp = 0.0002;
+
+    public static final SimpleMotorFeedforward kDriveModel = new SimpleMotorFeedforward(
+            Constants.kDriveKs,
+            Constants.kDriveKv,
+            Constants.kDriveKa
+    );
+
+    public static final DifferentialDriveVoltageConstraint kDriveVoltageConstraint = new DifferentialDriveVoltageConstraint(
+            kDriveModel, Constants.kDriveKinematics, 10.0
+    );
+
+    public static final CentripetalAccelerationConstraint kDriveCentripConstraint = new CentripetalAccelerationConstraint(
+            Units.inchesToMeters(100.0)
+    );
+
+    public static final TrajectoryConfig kDriveTrajectoryConfig = new TrajectoryConfig(
+            Constants.kDriveMaxSpeedMPerSec,
+            Constants.kDriveMaxAccelMPerSecPerSec
+    ).setKinematics(Constants.kDriveKinematics).addConstraint(kDriveVoltageConstraint).addConstraint(kDriveCentripConstraint);
 
     // Intake constants
     public static final double kIntakePercent = 0.5;
