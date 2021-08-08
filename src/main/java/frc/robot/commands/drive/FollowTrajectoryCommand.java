@@ -35,6 +35,7 @@ public class FollowTrajectoryCommand extends CommandBase {
     @Override
     public void initialize() {
         //drive.setGains(SmartDashboard.getNumber("DriveSparkKp", 0), SmartDashboard.getNumber("DriveSparkKd", 0));
+        System.out.println("STARTING TRAJECTORY COMMAND");
         prevTime = -1;
         var initialState = trajectory.sample(0);
         if (forcePose) {

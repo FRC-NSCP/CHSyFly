@@ -33,6 +33,7 @@ public class ShooterIOReal implements ShooterIO {
         hoodPID.setD(Constants.kHoodKd);
 
         kicker.setSmartCurrentLimit(20);
+        kicker.setIdleMode(CANSparkMax.IdleMode.kBrake);
     }
 
     @Override

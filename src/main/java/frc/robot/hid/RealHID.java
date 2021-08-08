@@ -10,12 +10,18 @@ public class RealHID implements HID {
     Joystick controller = new Joystick(5);
 
     private final Button toggleIntake = new JoystickButton(controller, 1);
-    private final Button centerTurret = new JoystickButton(controller, 2);
+    private final Button centerTurret = new JoystickButton(rightStick, 4);
     private final Button startShooter = new JoystickButton(controller, 7);
     private final Button runHopper = new JoystickButton(controller, 6);
     private final Button unjamHopper = new JoystickButton(controller, 8);
     private final Button shootBall = new JoystickButton(rightStick, 2);
+    private final Button resetDrive = new JoystickButton(rightStick, 5);
 
+
+    @Override
+    public Button resetDrive() {
+        return resetDrive;
+    }
 
     @Override
     public double getDriveTranslation() {

@@ -35,22 +35,18 @@ public class HomeHood extends CommandBase {
             timer.stop(); // Stop and reset the count
             timer.reset();
         }
-
-        if (timer.hasElapsed(Constants.kHoodHomingTime)) {
-            shooter.resetHoodPosition();
-            shooter.setHoodVoltage(0.0);
-            shooter.setHoodHomed(true);
-        }
     }
 
     @Override
     public void end(boolean interrupted) {
-        shooter.setHoodVoltage(0.0);
-        System.out.println("HOMING DONE");
+        shooter.resetHoodPosition();
+        shooter.setHoodHomed(true);
+        shooter.setHoodVoltage(0);
+        System.out.println("HOOD HOMING DONE");
     }
 
     @Override
     public boolean isFinished() {
-        return shooter.isHoodHomed(); // This command is done when the turret is homed
+        return timer.hasElapsed(Constants.kHoodHomingTime);
     }
 }

@@ -68,8 +68,6 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotInit() {
-        Threads.setCurrentThreadPriority(true, 50);
-
         if (isSimulation()) {
             // Simulation mode
             hid = new TestHID();
@@ -92,17 +90,16 @@ public class Robot extends TimedRobot {
 
         commands = new RobotCommands(hid, drive, intake, climb, feeder, turret, vision, shooter);
 
-        //drive.setDefaultCommand(commands.driveOperatorControl);
+        drive.setDefaultCommand(commands.driveOperatorControl);
         intake.setDefaultCommand(commands.stowIntake);
-        //climb.setDefaultCommand(commands.runClimbers);
+        climb.setDefaultCommand(commands.runClimbers);
         feeder.setDefaultCommand(commands.loadTower);
-        //intake.setDefaultCommand(commands.runIntakeTeleop);
         turret.setDefaultCommand(commands.stowTurret);
 
         vision.setDefaultCommand(commands.idleVision);
 
         LiveWindow.disableAllTelemetry(); // Disable telemetry because it eats performance
-        NetworkTableInstance.getDefault().setUpdateRate(0.01);
+        m_autonomousCommand = commands.runEightBallAuto;
     }
 
     @Override
@@ -114,6 +111,7 @@ public class Robot extends TimedRobot {
     @Override
     public void disabledInit() {
         commands.disabledCoastCommand.schedule();
+        m_autonomousCommand.cancel();
     }
 
     @Override
@@ -121,10 +119,9 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-        commands.driveStraightTest.schedule();
-        if (m_autonomousCommand != null) {
-            m_autonomousCommand.schedule();
-        }
+        m_autonomousCommand = commands.getAutoCommand();
+        m_autonomousCommand.cancel();
+        m_autonomousCommand.schedule();
     }
 
     @Override
@@ -132,11 +129,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
-        commands.driveStraightTest.cancel();
-        RobotState.getInstance().forceRobotPose(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(180.0)));
-        if (m_autonomousCommand != null) {
-            m_autonomousCommand.cancel();
-        }
+        m_autonomousCommand.cancel();
     }
 
     @Override

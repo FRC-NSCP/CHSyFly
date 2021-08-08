@@ -35,6 +35,7 @@ public class RobotState {
         Pose2d bootToVehicle = this.bootToVehicle.getLatest().orElseThrow().getPose();
         Pose2d vehicleToBoot = GeomUtil.poseInverse(bootToVehicle);
         fieldToBoot = fieldToVehicle.transformBy(GeomUtil.poseToTransform(vehicleToBoot));
+        latestMeasuredFieldToTarget = Constants.kTargetInitialPose;
     }
 
     public void recordOdometryObservations(double timestamp, Pose2d bootToVehicle, ChassisSpeeds velocity) {

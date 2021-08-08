@@ -16,6 +16,8 @@ import org.team401.util.PolynomialRegression;
 public class Constants {
     public static final double kDt = 0.02; // Loop cycle time, in seconds
 
+    public static final Pose2d kTargetInitialPose = new Pose2d(0, 5.75, Rotation2d.fromDegrees(0));
+
     // Robot geomertry
     // Length and width of robot (bumper to bumper)
     public static final double kRobotLengthMeters = Units.inchesToMeters(34.0);
@@ -31,8 +33,8 @@ public class Constants {
     public static final double kDriveEmpTrackwidthMeters = 0.7804000846764156;
     public static final double kTrackScrubFactor = kDriveTrackwidthMeters / kDriveEmpTrackwidthMeters;
     public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(Constants.kDriveEmpTrackwidthMeters);
-    public static final double kDriveMaxSpeedMPerSec = Units.inchesToMeters(10.0 * 12.0); // 10 ft/s -> in/s -> m/s
-    public static final double kDriveMaxAccelMPerSecPerSec = kDriveMaxSpeedMPerSec * 0.5;
+    public static final double kDriveMaxSpeedMPerSec = Units.inchesToMeters(12.0 * 12.0); // 10 ft/s -> in/s -> m/s
+    public static final double kDriveMaxAccelMPerSecPerSec = kDriveMaxSpeedMPerSec * 0.7;
 
     public static final double kDriveKs = 0.247;
     public static final double kDriveKv = 2.4;
@@ -59,6 +61,11 @@ public class Constants {
             Constants.kDriveMaxAccelMPerSecPerSec
     ).setKinematics(Constants.kDriveKinematics).addConstraint(kDriveVoltageConstraint).addConstraint(kDriveCentripConstraint);
 
+    public static final TrajectoryConfig kDriveTrajectoryConfigReverse = new TrajectoryConfig(
+            Constants.kDriveMaxSpeedMPerSec,
+            Constants.kDriveMaxAccelMPerSecPerSec
+    ).setKinematics(Constants.kDriveKinematics).addConstraint(kDriveVoltageConstraint).addConstraint(kDriveCentripConstraint).setReversed(true);
+
     // Intake constants
     public static final double kIntakePercent = 0.5;
     public static final double kSpitOutPercent = -0.5;
@@ -72,10 +79,11 @@ public class Constants {
 
     //Feeder constants
     public static final double kKickerPercent = 1.0;
-    public static final double kFeederInPercent = 0.8;
-    public static final double kHopperLeftPercent = 0.5;
-    public static final double kHopperRightPercent = 0.6;
+    public static final double kFeederInPercent = 0.75;
+    public static final double kHopperLeftPercent = 0.45;
+    public static final double kHopperRightPercent = 0.65;
     public static final double kFeederOutPercent = -0.7;
+    public static final double kFeederLowerWaitTime = 0.5; //Time to wait between turning on feeder and V
     
 
     //Turret constants

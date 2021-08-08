@@ -62,13 +62,7 @@ public class TurretSubsystem extends SubsystemBase {
         angle = new Rotation2d(getAbsolutePositionRadians());
         velocity = io.getVelocityRadiansPerSec();
 
-        if (!isHomed) {
-            // If the turret isn't homed, ensure a non-interruptible home command is running
-            // until it is.  Do not do anything else until this is done
-            Command currentCommand = getCurrentCommand();
-            if (currentCommand != null && currentCommand != homeCommand) {
-                currentCommand.cancel();
-            }
+        if (!isHomed && DriverStation.getInstance().isOperatorControlEnabled()) {
             homeCommand.schedule(false);
             return;
         }

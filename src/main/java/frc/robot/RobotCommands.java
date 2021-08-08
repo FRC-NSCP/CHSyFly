@@ -1,6 +1,9 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.commands.climb.RunClimbers;
 import frc.robot.commands.drive.CharacterizeDrive;
 import frc.robot.commands.drive.DisabledCoastCommand;
@@ -10,15 +13,14 @@ import frc.robot.commands.feeder.FeedShooter;
 import frc.robot.commands.feeder.LoadTower;
 import frc.robot.commands.feeder.RunFeederIn;
 import frc.robot.commands.feeder.RunFeederOut;
+import frc.robot.commands.intake.RunIntakeAuto;
 import frc.robot.commands.intake.RunIntakeTeleop;
 import frc.robot.commands.intake.StowIntake;
 import frc.robot.commands.shooter.CharacterizeShooter;
+import frc.robot.commands.shooter.HomeHood;
 import frc.robot.commands.shooter.RunShooter;
 import frc.robot.commands.shooter.TuneHood;
-import frc.robot.commands.turret.CharacterizeTurret;
-import frc.robot.commands.turret.StowTurret;
-import frc.robot.commands.turret.TuneTurret;
-import frc.robot.commands.turret.TurretTrackTarget;
+import frc.robot.commands.turret.*;
 import frc.robot.commands.vision.IdleVision;
 import frc.robot.commands.vision.RunVisionTracking;
 import frc.robot.hid.HID;
@@ -31,6 +33,8 @@ import frc.robot.subsystems.turret.TurretSubsystem;
 import frc.robot.subsystems.vision.VisionSubsystem;
 
 public class RobotCommands {
+    private final SendableChooser<Command> autoChooser = new SendableChooser<>();
+
     private final HID hid;
     private final DriveSubsystem drive;
     private final IntakeSubsystem intake;
@@ -59,13 +63,20 @@ public class RobotCommands {
     public final CharacterizeShooter characterizeShooter;
     public final RunShooter runShooter;
 
-    public final TuneHood tuneHood0, tuneHood1, tuneHood2, tuneHood3;
-
     public final CharacterizeDrive characterizeDrive;
-
     public final DisabledCoastCommand disabledCoastCommand;
-
     public final FollowTrajectoryCommand driveStraightTest;
+    public final FollowTrajectoryCommand driveEightBallAutoCollectTrajectory;
+    public final FollowTrajectoryCommand driveEightBallAutoReturnTrajectory;
+    public final FollowTrajectoryCommand driveStealAutoCollectTrajectory;
+    public final FollowTrajectoryCommand driveStealAutoReturnTrajectory;
+
+
+    public final Command trackAndRunShooter;
+
+    // Autos
+    public final Command runEightBallAuto;
+    public final Command runStealAuto;
 
     public RobotCommands(HID hid, DriveSubsystem drive, IntakeSubsystem intake, ClimbSubsystem climb, FeederSubsystem feeder, TurretSubsystem turret, VisionSubsystem vision, ShooterSubsystem shooter) {
         this.hid = hid;
@@ -83,46 +94,85 @@ public class RobotCommands {
         feedShooter = new FeedShooter(feeder, shooter);
         loadTower = new LoadTower(feeder);
         feederIn = new RunFeederIn(feeder);
-        feederOut = new RunFeederOut(feeder, shooter, hid);
+        feederOut = new RunFeederOut(feeder, hid);
 
         characterizeTurret = new CharacterizeTurret(turret);
         tuneTurret0 = new TuneTurret(turret, 0.0);
         tuneTurret90 = new TuneTurret(turret, Math.toRadians(-90));
         stowTurret = new StowTurret(turret);
         turretTrackTarget = new TurretTrackTarget(turret);
-        SmartDashboard.putData("TuneTurret0", tuneTurret0);
-        SmartDashboard.putData("TuneTurret90", tuneTurret90);
-        SmartDashboard.putData("TurretTrackTarget", turretTrackTarget);
 
         idleVision = new IdleVision(vision);
         runVisionTracking = new RunVisionTracking(vision);
-        SmartDashboard.putData("DebugRunVisionTracking", runVisionTracking);
 
         characterizeShooter = new CharacterizeShooter(shooter);
         runShooter = new RunShooter(shooter);
-        SmartDashboard.putData("RunShooterDebug", runShooter);
-        SmartDashboard.putData("FeedShooterDebug", feedShooter);
-
-        tuneHood0 = new TuneHood(shooter, 0);
-        tuneHood1 = new TuneHood(shooter, 1);
-        tuneHood2 = new TuneHood(shooter, 2);
-        tuneHood3 = new TuneHood(shooter, 3);
-        SmartDashboard.putData("TuneHood0", tuneHood0);
-        SmartDashboard.putData("TuneHood1", tuneHood1);
-        SmartDashboard.putData("TuneHood2", tuneHood2);
-        SmartDashboard.putData("TuneHood3", tuneHood3);
-
-        //SmartDashboard.putData("AimAndRunShooter", runShooter.alongWith(turretTrackTarget, runVisionTracking));
 
         characterizeDrive = new CharacterizeDrive(drive);
-
         disabledCoastCommand = new DisabledCoastCommand(drive);
-
         driveStraightTest = new FollowTrajectoryCommand(drive, DriveTrajectories.straightTrajectory, true);
-        SmartDashboard.putData("DriveStraight", driveStraightTest);
+        trackAndRunShooter = new RunShooter(shooter).alongWith(new RunVisionTracking(vision), new TurretTrackTarget(turret));
+
+        driveEightBallAutoCollectTrajectory = new FollowTrajectoryCommand(drive, DriveTrajectories.eightBallCollectTrajectory, true);
+        driveEightBallAutoReturnTrajectory = new FollowTrajectoryCommand(drive, DriveTrajectories.eightBallReturnTrajectory, false);
+
+        driveStealAutoCollectTrajectory = new FollowTrajectoryCommand(drive, DriveTrajectories.stealCollectTrajectory, true);
+        driveStealAutoReturnTrajectory = new FollowTrajectoryCommand(drive, DriveTrajectories.stealReturnTrajectory, false);
+
+        runEightBallAuto = new SequentialCommandGroup(
+                new InstantCommand(() -> RobotState.getInstance().forceRobotPose(DriveTrajectories.eightBallCollectTrajectory.getInitialPose())),
+                new HomeHood(shooter),
+                new ParallelCommandGroup(
+                        new RunShooter(shooter),
+                        new SequentialCommandGroup(
+                                new HomeTurret(turret),
+                                new ParallelCommandGroup(
+                                        new RunVisionTracking(vision),
+                                        new TurretTrackTarget(turret),
+                                        new SequentialCommandGroup(
+                                                new WaitCommand(0.25),
+                                                new FeedShooter(feeder, shooter).withTimeout(3.0),
+                                                driveEightBallAutoCollectTrajectory.deadlineWith(new RunIntakeAuto(intake)),
+                                                driveEightBallAutoReturnTrajectory.deadlineWith(new RunIntakeAuto(intake)),
+                                                new FeedShooter(feeder, shooter).alongWith(new RunIntakeAuto(intake).withTimeout(1).andThen(new StowIntake(intake, hid)))
+                                        )
+                                )
+                        )
+                )
+        );
+
+        runStealAuto = new SequentialCommandGroup(
+                new InstantCommand(() -> RobotState.getInstance().forceRobotPose(DriveTrajectories.stealCollectTrajectory.getInitialPose())),
+                new HomeHood(shooter),
+                new ParallelCommandGroup(
+                        new RunShooter(shooter),
+                        new SequentialCommandGroup(
+                                new ParallelCommandGroup(
+                                        new HomeTurret(turret),
+                                        driveStealAutoCollectTrajectory.deadlineWith(new RunIntakeAuto(intake))
+                                ),
+                                new ParallelCommandGroup(
+                                        new RunVisionTracking(vision),
+                                        new TurretTrackTarget(turret),
+                                        new SequentialCommandGroup(
+                                                driveStealAutoReturnTrajectory.deadlineWith(new StowIntake(intake, hid)),
+                                                new FeedShooter(feeder, shooter).alongWith(new RunIntakeAuto(intake))
+                                        )
+                                )
+                        )
+                ));
+
+                autoChooser.setDefaultOption("Eight Ball", runEightBallAuto);
+                autoChooser.addOption("Steal", runStealAuto);
 
 
-        //bindHID();
+        SmartDashboard.putData("Auto Selector", autoChooser);
+
+        bindHID();
+    }
+
+    public Command getAutoCommand() {
+        return autoChooser.getSelected();
     }
 
     /**
@@ -130,8 +180,10 @@ public class RobotCommands {
      */
     private void bindHID() {
         hid.toggleIntakeButton().toggleWhenPressed(runIntakeTeleop);
-        hid.runHopper().whenHeld(feederIn);
-        hid.unJamHopper().whenHeld(feederOut);
-        hid.shootBall().whenHeld(feedShooter);
+        //hid.runHopper().whenHeld(feederIn);
+        hid.unJamHopper().whenHeld(feederOut, false);
+        hid.shootBall().whileHeld(trackAndRunShooter).whileHeld(feedShooter); // Whileheld to resume if interrupted
+        hid.centerTurret().whenPressed(stowTurret).whenHeld(runVisionTracking);
+        hid.resetDrive().whenPressed(drive::reset);
     }
 }

@@ -1,5 +1,6 @@
 package frc.robot.subsystems.shooter;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -39,15 +40,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if (!hoodHomed) {
-            // If the turret isn't homed, ensure a non-interruptible home command is running
-            // until it is.  Do not do anything else until this is done
-            Command currentCommand = getCurrentCommand();
-            if (currentCommand != null && currentCommand != homeHood) {
-                currentCommand.cancel();
-            }
+        if (!hoodHomed && DriverStation.getInstance().isOperatorControlEnabled()) {
             homeHood.schedule(false);
-            return;
         }
     }
 

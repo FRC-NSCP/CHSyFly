@@ -24,6 +24,10 @@ public interface DriveIO {
 
     void setBrake(boolean brake);
 
+    void configControllers();
+
+    boolean hasResetOccurred();
+
     double getLeftPositionRadians();
     double getRightPositionRadians();
 

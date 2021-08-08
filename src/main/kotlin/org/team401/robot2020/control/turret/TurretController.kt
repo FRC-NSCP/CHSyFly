@@ -2,6 +2,8 @@ package org.team401.robot2020.control.turret
 
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward
 import edu.wpi.first.wpilibj.geometry.Rotation2d
+import edu.wpi.first.wpiutil.math.MathUtil
+import frc.robot.Constants
 import frckit.util.GeomUtil
 import org.team401.units.measure.acceleration.angular.MeasureRadiansPerSecondPerSecond
 import org.team401.units.measure.distance.angular.MeasureRadians
@@ -138,10 +140,11 @@ class TurretController(
         val currentRotation = Rotation2d(currentPosition.value) //Clamp current position to -180..180
         val delta = currentRotation.unaryMinus().rotateBy(targetRotation) //Solve distance to go
 
-        var targetPosition = currentPosition + delta.radians.Radians //Attempt shortest route
-        if (targetPosition > upperLimitAngleAbsolute) targetPosition = upperLimitAngleAbsolute
-        if (targetPosition < lowerLimitAngleAbsolute) targetPosition = lowerLimitAngleAbsolute;
-        return targetPosition //This is now guaranteed to be clamped safely
+        return MathUtil.clamp(
+            currentPosition.value + delta.radians,
+            Constants.kTurretLowerLimitAngleAbsoluteRad,
+            Constants.kTurretUpperLimitAngleAbsoluteRad
+        ).Radians
     }
 
     //Checks if a move should be a rapid
@@ -273,7 +276,7 @@ class TurretController(
     }
 
     fun updateAbsoluteAngle(angleAbsoluteRadians: Double) {
-        val angleAbsolute = angleAbsoluteRadians.Radians
+        val angleAbsolute = MathUtil.clamp(angleAbsoluteRadians, Constants.kTurretLowerLimitAngleAbsoluteRad, Constants.kTurretUpperLimitAngleAbsoluteRad).Radians
         updateState()
         val feedbackVolts = rapidController.calculate(currentPosition.value, angleAbsolute.value)
         val ffVolts = model.calculate(

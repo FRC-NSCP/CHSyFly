@@ -18,6 +18,7 @@ public class RunShooter extends CommandBase {
 
     @Override
     public void initialize() {
+        System.out.println("STARTING RUN SHOOTER");
         shooter.resetProfiler();
 
     }

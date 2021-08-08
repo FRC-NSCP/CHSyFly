@@ -35,22 +35,18 @@ public class HomeTurret extends CommandBase {
             timer.stop(); // Stop and reset the count
             timer.reset();
         }
-
-        if (timer.hasElapsed(Constants.kTurretHomingTimeSec)) {
-            turret.resetPosition();
-            turret.setVoltage(0.0);
-            turret.setHomed(true);
-        }
     }
 
     @Override
     public void end(boolean interrupted) {
+        turret.resetPosition();
         turret.setVoltage(0.0);
-        System.out.println("HOMING DONE");
+        turret.setHomed(true);
+        System.out.println("TURRET HOMING DONE");
     }
 
     @Override
     public boolean isFinished() {
-        return turret.getHomed(); // This command is done when the turret is homed
+        return timer.hasElapsed(Constants.kTurretHomingTimeSec); // This command is done when the turret is homed
     }
 }

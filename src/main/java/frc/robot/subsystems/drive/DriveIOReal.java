@@ -21,13 +21,25 @@ public class DriveIOReal implements DriveIO {
     private final CANEncoder rightEnc = rightMain.getEncoder();
 
     public DriveIOReal(TalonSRX pigeonTalon) {
+        imu = new PigeonIMU(pigeonTalon);
+
+        configControllers();
+    }
+
+    @Override
+    public void configControllers() {
         leftFollow.follow(leftMain);
         rightFollow.follow(rightMain);
 
         leftMain.setInverted(true);
-        imu = new PigeonIMU(pigeonTalon);
         leftPID.setP(Constants.kDriveKp);
         rightPID.setP(Constants.kDriveKp);
+    }
+
+    @Override
+    public boolean hasResetOccurred() {
+        return leftMain.getFault(CANSparkMax.FaultID.kHasReset) || rightMain.getFault(CANSparkMax.FaultID.kHasReset)
+                || leftFollow.getFault(CANSparkMax.FaultID.kHasReset) || rightFollow.getFault(CANSparkMax.FaultID.kHasReset);
     }
 
     @Override

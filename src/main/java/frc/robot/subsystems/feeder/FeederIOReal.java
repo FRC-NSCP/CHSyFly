@@ -1,5 +1,7 @@
 package frc.robot.subsystems.feeder;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.CANSparkMax;
@@ -17,6 +19,14 @@ public class FeederIOReal implements FeederIO {
     public FeederIOReal() {
         hopperLeft.setInverted(true);
         hopperRight.setInverted(true);
+        feeder.setNeutralMode(NeutralMode.Brake);
+        feeder.setStatusFramePeriod(StatusFrame.Status_1_General, 200);
+        feeder.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 200);
+        hopperLeft.setStatusFramePeriod(StatusFrame.Status_1_General, 200);
+        hopperLeft.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 200);
+        hopperRight.setStatusFramePeriod(StatusFrame.Status_1_General, 200);
+        hopperRight.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 200);
+
     }
 
     /**

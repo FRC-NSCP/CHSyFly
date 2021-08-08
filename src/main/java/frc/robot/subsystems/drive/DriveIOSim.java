@@ -48,6 +48,16 @@ public class DriveIOSim implements DriveIO {
     }
 
     @Override
+    public void configControllers() {
+        //no-op
+    }
+
+    @Override
+    public boolean hasResetOccurred() {
+        return false;
+    }
+
+    @Override
     public void setVoltage(double leftVolts, double rightVolts) {
         sim.setInputs(leftVolts, rightVolts);
     }

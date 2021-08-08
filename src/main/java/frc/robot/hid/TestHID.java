@@ -24,6 +24,10 @@ public class TestHID implements HID {
         return testGamepad.getRawAxis(2); // Right stick X
     }
 
+    @Override
+    public Button resetDrive() {
+        return null;
+    }
 
     @Override
     public double getLeftClimber() {

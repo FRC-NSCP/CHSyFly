@@ -18,6 +18,9 @@ public interface HID {
 
     Button centerTurret();
     Button shootBall();
+
+    Button resetDrive();
+
     Button startShoot();
 
     Button revUpShooter();

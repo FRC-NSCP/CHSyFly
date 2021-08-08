@@ -88,6 +88,11 @@ public class DriveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("DriveLeftVeL", getLeftVelocityMetersPerSec());
         SmartDashboard.putNumber("DriveRightVel", getRightVelocityMetersPerSec());
 
+        if (io.hasResetOccurred()) {
+            io.configControllers();
+            System.out.println("RESETTING DRIVE CONTROLLERS");
+        }
+
     }
 
     public void stop() {
@@ -99,6 +104,10 @@ public class DriveSubsystem extends SubsystemBase {
     }
     public void setVoltage(double left, double right) {
         io.setVoltage(left, right);
+    }
+
+    public void reset() {
+        io.configControllers();
     }
 
     public void setVelocity(double left, double right, double leftFF, double rightFF) {
