@@ -4,14 +4,17 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.hid.HID;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.shooter.ShooterSubsystem;
 
 public class StowIntake extends CommandBase {
     private final IntakeSubsystem intake;
+    private final ShooterSubsystem shooter;
     private final HID hid;
 
-    public StowIntake(IntakeSubsystem intake, HID hid) {
+    public StowIntake(IntakeSubsystem intake, ShooterSubsystem shooter, HID hid) {
         this.intake = intake;
         this.hid = hid;
+        this.shooter = shooter;
 
         addRequirements(intake);
     }
@@ -28,6 +31,8 @@ public class StowIntake extends CommandBase {
             intake.runIntake(Constants.kIntakePercent);
         } else if (hid.runOuttakeButton()) {
             intake.runIntake(Constants.kSpitOutPercent);
+        } else if (shooter.isShooting()) {
+            intake.runIntake(Constants.kIntakeShootPercent);
         } else {
             intake.stop();
         }

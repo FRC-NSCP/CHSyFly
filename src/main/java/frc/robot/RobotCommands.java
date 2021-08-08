@@ -9,10 +9,7 @@ import frc.robot.commands.drive.CharacterizeDrive;
 import frc.robot.commands.drive.DisabledCoastCommand;
 import frc.robot.commands.drive.DriveOperatorControl;
 import frc.robot.commands.drive.FollowTrajectoryCommand;
-import frc.robot.commands.feeder.FeedShooter;
-import frc.robot.commands.feeder.LoadTower;
-import frc.robot.commands.feeder.RunFeederIn;
-import frc.robot.commands.feeder.RunFeederOut;
+import frc.robot.commands.feeder.*;
 import frc.robot.commands.intake.RunIntakeAuto;
 import frc.robot.commands.intake.RunIntakeTeleop;
 import frc.robot.commands.intake.StowIntake;
@@ -75,6 +72,8 @@ public class RobotCommands {
 
     public final Command trackAndRunShooter;
 
+    public final Command runWallSequence;
+
     // Autos
     public final Command runEightBallAuto;
     public final Command runStealAuto;
@@ -89,7 +88,7 @@ public class RobotCommands {
         this.shooter = shooter;
 
         driveOperatorControl = new DriveOperatorControl(drive, hid);
-        stowIntake = new StowIntake(intake, hid);
+        stowIntake = new StowIntake(intake, shooter, hid);
         runIntakeTeleop = new RunIntakeTeleop(intake, hid);
         runClimbers = new RunClimbers(climb, hid);
         feedShooter = new FeedShooter(feeder, shooter);
@@ -136,10 +135,10 @@ public class RobotCommands {
                                         new TurretTrackTarget(turret),
                                         new SequentialCommandGroup(
                                                 new WaitCommand(0.25),
-                                                new FeedShooter(feeder, shooter).withTimeout(1.5),
+                                                new FeedShooter3(feeder, shooter).withTimeout(2),
                                                 driveEightBallAutoCollectTrajectory.deadlineWith(new RunIntakeAuto(intake)),
-                                                driveEightBallAutoReturnTrajectory.deadlineWith(new RunIntakeAuto(intake)),
-                                                new FeedShooter(feeder, shooter).alongWith(new RunIntakeAuto(intake).withTimeout(1).andThen(new StowIntake(intake, hid)))
+                                                driveEightBallAutoReturnTrajectory.deadlineWith(new StowIntake(intake, shooter, hid)),
+                                                new FeedShooter(feeder, shooter).alongWith(new StowIntake(intake, shooter, hid))
                                         )
                                 )
                         )
@@ -160,12 +159,14 @@ public class RobotCommands {
                                         new RunVisionTracking(vision),
                                         new TurretTrackTarget(turret),
                                         new SequentialCommandGroup(
-                                                driveStealAutoReturnTrajectory.deadlineWith(new StowIntake(intake, hid)),
+                                                driveStealAutoReturnTrajectory.deadlineWith(new StowIntake(intake, shooter, hid)),
                                                 new FeedShooter(feeder, shooter).alongWith(new RunIntakeAuto(intake))
                                         )
                                 )
                         )
                 ));
+
+        runWallSequence = new RunShooter(shooter, RunShooter.ShootMode.WALL_FIX).alongWith(driveBackFromWall.andThen(new FeedShooter(feeder, shooter)));
 
                 autoChooser.setDefaultOption("Eight Ball", runEightBallAuto);
                 autoChooser.addOption("Steal", runStealAuto);
@@ -189,7 +190,7 @@ public class RobotCommands {
         hid.unJamHopper().whenHeld(feederOut, false);
         hid.shootBall().whileHeld(trackAndRunShooter).whileHeld(feedShooter); // Whileheld to resume if interrupted
         hid.limpShoot().whileHeld(runShooterLimp).whileHeld(feedShooter).whileHeld(stowTurret);
-        hid.wallShoot().whenHeld(runShooterWall.alongWith(driveBackFromWall.andThen(feedShooter)));
+        hid.wallShoot().whenHeld(runWallSequence);
         hid.centerTurret().whenPressed(stowTurret).whenHeld(runVisionTracking);
         hid.resetDrive().whenPressed(drive::reset);
     }

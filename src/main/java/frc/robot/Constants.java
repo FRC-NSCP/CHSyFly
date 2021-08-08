@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.trajectory.constraint.CentripetalAccelerationConstr
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.util.Units;
 import frckit.util.GeomUtil;
+import org.team401.robot2020.control.turret.TurretController;
 import org.team401.util.PolynomialRegression;
 
 public class Constants {
@@ -68,6 +69,7 @@ public class Constants {
 
     // Intake constants
     public static final double kIntakePercent = 0.5;
+    public static final double kIntakeShootPercent = 0.4;
     public static final double kSpitOutPercent = -0.5;
     public static final boolean kIntakeRetracted = false;
     public static final boolean kIntakeExtended = true;
@@ -79,11 +81,11 @@ public class Constants {
 
     //Feeder constants
     public static final double kKickerPercent = 1.0;
-    public static final double kFeederInPercent = 0.75;
-    public static final double kHopperLeftPercent = 0.45;
-    public static final double kHopperRightPercent = 0.65;
+    public static final double kFeederInPercent = 0.70;
+    public static final double kHopperLeftPercent = 0.25;
+    public static final double kHopperRightPercent = 0.55;
     public static final double kFeederOutPercent = -0.7;
-    public static final double kFeederLowerWaitTime = 0.5; //Time to wait between turning on feeder and V
+    public static final double kFeederLowerWaitTime = 1; //Time to wait between turning on feeder and V
     
 
     //Turret constants
@@ -150,4 +152,35 @@ public class Constants {
             },
             3
     );
+
+    public static void main(String[] args) {
+        TurretController controller = TurretController.createFromJava(
+                Constants.kTurretKp,
+                Constants.kTurretKd,
+                Constants.kTurretTrackingKp,
+                Constants.kTurretTrackingKd,
+                Constants.kTurretKs,
+                Constants.kTurretKv,
+                Constants.kTurretKa,
+                Constants.kTurretVelocityConstraintRadPerSec,
+                Constants.kTurretAccelConstraintRadPerSecPerSec,
+                Constants.kTurretRapidThresholdDistance,
+                Constants.kTurretLowerLimitAngleAbsoluteRad,
+                Constants.kTurretUpperLimitAngleAbsoluteRad,
+                () -> 0,
+                () -> 0,
+                (d) -> {},
+                Constants.kDt
+        );
+
+        controller.enterAngle();
+        while (true) {
+            controller.updateAngle(Rotation2d.fromDegrees(Math.random()), Math.random());
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

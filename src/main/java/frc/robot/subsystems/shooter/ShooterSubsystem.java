@@ -22,6 +22,16 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private boolean hoodHomed = false;
 
+    private boolean shooting = false;
+
+    public boolean isShooting() {
+        return shooting;
+    }
+
+    public void setShooting(boolean shooting) {
+        this.shooting = shooting;
+    }
+
     public boolean isHoodHomed() {
         return hoodHomed;
     }

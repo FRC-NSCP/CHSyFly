@@ -6,13 +6,13 @@ import frc.robot.Constants;
 import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 
-public class FeedShooter extends CommandBase {
+public class FeedShooter3 extends CommandBase {
     private final FeederSubsystem feeder;
     private final ShooterSubsystem shooter;
 
     private final Timer feedTimer = new Timer();
 
-    public FeedShooter(FeederSubsystem feeder, ShooterSubsystem shooter) {
+    public FeedShooter3(FeederSubsystem feeder, ShooterSubsystem shooter) {
         this.feeder = feeder;
         this.shooter = shooter;
 
@@ -34,7 +34,7 @@ public class FeedShooter extends CommandBase {
             if (feedTimer.hasElapsed(Constants.kFeederLowerWaitTime)) {
                 feeder.runFunnel(Constants.kHopperLeftPercent, Constants.kHopperRightPercent);
             } else {
-                feeder.runFunnel(-.5, -.5);
+                feeder.runFunnel(0, 0);
             }
         } else {
             feeder.stop();
