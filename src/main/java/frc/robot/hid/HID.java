@@ -22,6 +22,8 @@ public interface HID {
     Button resetDrive();
 
     Button startShoot();
+    Button limpShoot();
+    Button wallShoot();
 
     Button revUpShooter();
 

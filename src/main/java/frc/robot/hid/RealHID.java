@@ -16,6 +16,8 @@ public class RealHID implements HID {
     private final Button unjamHopper = new JoystickButton(controller, 8);
     private final Button shootBall = new JoystickButton(rightStick, 2);
     private final Button resetDrive = new JoystickButton(rightStick, 5);
+    private final Button limpShoot = new JoystickButton(leftStick, 4);
+    private final Button wallShoot = new JoystickButton(leftStick, 2);
 
 
     @Override
@@ -69,6 +71,11 @@ public class RealHID implements HID {
     }
 
     @Override
+    public Button limpShoot() {
+        return limpShoot;
+    }
+
+    @Override
     public Button revUpShooter() {
         return startShooter;
     }
@@ -87,5 +94,9 @@ public class RealHID implements HID {
     public Button centerTurret() {
         return centerTurret;
     }
-    
+
+    @Override
+    public Button wallShoot() {
+        return wallShoot;
+    }
 }

@@ -132,6 +132,8 @@ public class Constants {
     public static final double kHoodKp = 1.3;
     public static final double kHoodKd = 0.0;
     public static final double kShooterReadySpeedPercent = 0.03;
+    public static final double kLimpShootDistanceM = 5.8458;
+    public static final double kWallBackDistanceM = Units.inchesToMeters(2 * 12);
 
     private static final double shooterOffset = kVehicleToTurret.getX();
     public static final PolynomialRegression kHoodLut = new PolynomialRegression(

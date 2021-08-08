@@ -65,6 +65,11 @@ public class DriveTrajectories {
             new Pose2d(3, 5.157, Rotation2d.fromDegrees(-45))
     );
 
+    public static final Trajectory wallReverseTrajectory = genMRev(
+            new Pose2d(Constants.kRobotLengthMeters / 2, 5.75, Rotation2d.fromDegrees(180)),
+            new Pose2d(Constants.kRobotLengthMeters / 2 + Constants.kWallBackDistanceM, 5.75, Rotation2d.fromDegrees(180))
+    );
+
     public static void main(String[] args) {
         TrajectoryVisualizer visualizer = new TrajectoryVisualizer(100, List.of(stealCollectTrajectory, stealReturnTrajectory), Constants.kDriveTrackwidthMeters, List.of());
         visualizer.start();

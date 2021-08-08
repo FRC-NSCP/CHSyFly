@@ -61,7 +61,7 @@ public class RobotCommands {
     public final RunVisionTracking runVisionTracking;
 
     public final CharacterizeShooter characterizeShooter;
-    public final RunShooter runShooter;
+    public final RunShooter runShooter, runShooterLimp, runShooterWall;
 
     public final CharacterizeDrive characterizeDrive;
     public final DisabledCoastCommand disabledCoastCommand;
@@ -70,6 +70,7 @@ public class RobotCommands {
     public final FollowTrajectoryCommand driveEightBallAutoReturnTrajectory;
     public final FollowTrajectoryCommand driveStealAutoCollectTrajectory;
     public final FollowTrajectoryCommand driveStealAutoReturnTrajectory;
+    public final FollowTrajectoryCommand driveBackFromWall;
 
 
     public final Command trackAndRunShooter;
@@ -106,7 +107,9 @@ public class RobotCommands {
         runVisionTracking = new RunVisionTracking(vision);
 
         characterizeShooter = new CharacterizeShooter(shooter);
-        runShooter = new RunShooter(shooter);
+        runShooter = new RunShooter(shooter, RunShooter.ShootMode.ODOM);
+        runShooterLimp = new RunShooter(shooter, RunShooter.ShootMode.LIMP_FIX);
+        runShooterWall = new RunShooter(shooter, RunShooter.ShootMode.WALL_FIX);
 
         characterizeDrive = new CharacterizeDrive(drive);
         disabledCoastCommand = new DisabledCoastCommand(drive);
@@ -118,6 +121,8 @@ public class RobotCommands {
 
         driveStealAutoCollectTrajectory = new FollowTrajectoryCommand(drive, DriveTrajectories.stealCollectTrajectory, true);
         driveStealAutoReturnTrajectory = new FollowTrajectoryCommand(drive, DriveTrajectories.stealReturnTrajectory, false);
+
+        driveBackFromWall = new FollowTrajectoryCommand(drive, DriveTrajectories.wallReverseTrajectory, true);
 
         runEightBallAuto = new SequentialCommandGroup(
                 new InstantCommand(() -> RobotState.getInstance().forceRobotPose(DriveTrajectories.eightBallCollectTrajectory.getInitialPose())),
@@ -131,7 +136,7 @@ public class RobotCommands {
                                         new TurretTrackTarget(turret),
                                         new SequentialCommandGroup(
                                                 new WaitCommand(0.25),
-                                                new FeedShooter(feeder, shooter).withTimeout(3.0),
+                                                new FeedShooter(feeder, shooter).withTimeout(1.5),
                                                 driveEightBallAutoCollectTrajectory.deadlineWith(new RunIntakeAuto(intake)),
                                                 driveEightBallAutoReturnTrajectory.deadlineWith(new RunIntakeAuto(intake)),
                                                 new FeedShooter(feeder, shooter).alongWith(new RunIntakeAuto(intake).withTimeout(1).andThen(new StowIntake(intake, hid)))
@@ -183,6 +188,8 @@ public class RobotCommands {
         //hid.runHopper().whenHeld(feederIn);
         hid.unJamHopper().whenHeld(feederOut, false);
         hid.shootBall().whileHeld(trackAndRunShooter).whileHeld(feedShooter); // Whileheld to resume if interrupted
+        hid.limpShoot().whileHeld(runShooterLimp).whileHeld(feedShooter).whileHeld(stowTurret);
+        hid.wallShoot().whenHeld(runShooterWall.alongWith(driveBackFromWall.andThen(feedShooter)));
         hid.centerTurret().whenPressed(stowTurret).whenHeld(runVisionTracking);
         hid.resetDrive().whenPressed(drive::reset);
     }

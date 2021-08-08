@@ -75,6 +75,16 @@ public class TestHID implements HID {
     }
 
     @Override
+    public Button limpShoot() {
+        return null;
+    }
+
+    @Override
+    public Button wallShoot() {
+        return null;
+    }
+
+    @Override
     public Button revUpShooter() {
         // TODO Auto-generated method stub
         return null;
