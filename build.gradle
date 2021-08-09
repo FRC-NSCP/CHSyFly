@@ -26,7 +26,7 @@ deploy {
     artifacts {
         frcJavaArtifact('frcJava') {
             targets << "roborio"
-            debug = frc.getDebugOrDefault(false)
+            debug = false
         }
     }
 }

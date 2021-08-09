@@ -46,11 +46,11 @@ public class DriveTrajectories {
     public static final Trajectory eightBallCollectTrajectory = genM(
             new Pose2d(3, 6.75, Rotation2d.fromDegrees(0)),
             new Pose2d(5.375, 7.5, Rotation2d.fromDegrees(0)),
-            new Pose2d(9.5, 7.5, Rotation2d.fromDegrees(0))
+            new Pose2d(9.5 + 0.152, 7.5, Rotation2d.fromDegrees(0))
     );
 
     public static final Trajectory eightBallReturnTrajectory = genMRev(
-            new Pose2d(9.5, 7.5, Rotation2d.fromDegrees(0)),
+            new Pose2d(9.5 + 0.152, 7.5, Rotation2d.fromDegrees(0)),
             new Pose2d(5.375, 7.5, Rotation2d.fromDegrees(0)),
             new Pose2d(3, 6.75, Rotation2d.fromDegrees(15))
     );
@@ -71,7 +71,7 @@ public class DriveTrajectories {
     );
 
     public static void main(String[] args) {
-        TrajectoryVisualizer visualizer = new TrajectoryVisualizer(100, List.of(stealCollectTrajectory, stealReturnTrajectory), Constants.kDriveTrackwidthMeters, List.of());
+        TrajectoryVisualizer visualizer = new TrajectoryVisualizer(100, List.of(eightBallCollectTrajectory, eightBallReturnTrajectory), Constants.kDriveTrackwidthMeters, List.of());
         visualizer.start();
     }
 }

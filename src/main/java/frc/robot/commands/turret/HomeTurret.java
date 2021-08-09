@@ -41,7 +41,8 @@ public class HomeTurret extends CommandBase {
     public void end(boolean interrupted) {
         turret.resetPosition();
         turret.setVoltage(0.0);
-        turret.setHomed(true);
+        if (!interrupted)
+            turret.setHomed(true);
         System.out.println("TURRET HOMING DONE");
     }
 

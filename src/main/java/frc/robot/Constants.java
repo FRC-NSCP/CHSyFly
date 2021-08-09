@@ -68,8 +68,8 @@ public class Constants {
     ).setKinematics(Constants.kDriveKinematics).addConstraint(kDriveVoltageConstraint).addConstraint(kDriveCentripConstraint).setReversed(true);
 
     // Intake constants
-    public static final double kIntakePercent = 0.5;
-    public static final double kIntakeShootPercent = 0.4;
+    public static final double kIntakePercent = 0.75;
+    public static final double kIntakeShootPercent = 0.6;
     public static final double kSpitOutPercent = -0.5;
     public static final boolean kIntakeRetracted = false;
     public static final boolean kIntakeExtended = true;

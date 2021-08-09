@@ -98,7 +98,7 @@ public class Robot extends TimedRobot {
 
         vision.setDefaultCommand(commands.idleVision);
 
-        LiveWindow.disableAllTelemetry(); // Disable telemetry because it eats performance
+        //LiveWindow.disableAllTelemetry(); // Disable telemetry because it eats performance
         m_autonomousCommand = commands.runEightBallAuto;
     }
 

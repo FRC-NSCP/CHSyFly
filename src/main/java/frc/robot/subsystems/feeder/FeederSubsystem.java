@@ -13,7 +13,6 @@ public class FeederSubsystem extends SubsystemBase {
     
     @Override
     public void periodic() {
-        SmartDashboard.putBoolean("Beam Break", seesBall());
     }
 
     public void runFunnel(double leftPower, double rightPower) {

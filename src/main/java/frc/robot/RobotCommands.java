@@ -192,6 +192,6 @@ public class RobotCommands {
         hid.limpShoot().whileHeld(runShooterLimp).whileHeld(feedShooter).whileHeld(stowTurret);
         hid.wallShoot().whenHeld(runWallSequence);
         hid.centerTurret().whenPressed(stowTurret).whenHeld(runVisionTracking);
-        hid.resetDrive().whenPressed(drive::reset);
+        //hid.resetDrive().whenPressed(drive::reset);
     }
 }

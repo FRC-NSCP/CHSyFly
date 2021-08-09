@@ -84,14 +84,13 @@ public class DriveSubsystem extends SubsystemBase {
         );
 
         RobotState.getInstance().recordOdometryObservations(Robot.getTimestamp(), odometry.getPoseMeters(), velocity);
-        SmartDashboard.putString("FieldToVehicle", GeomUtil.metersToInches(RobotState.getInstance().getLatestFieldToVehicle()).toString());
-        SmartDashboard.putNumber("DriveLeftVeL", getLeftVelocityMetersPerSec());
-        SmartDashboard.putNumber("DriveRightVel", getRightVelocityMetersPerSec());
 
+        /*
         if (io.hasResetOccurred()) {
             io.configControllers();
             System.out.println("RESETTING DRIVE CONTROLLERS");
         }
+         */
 
     }
 

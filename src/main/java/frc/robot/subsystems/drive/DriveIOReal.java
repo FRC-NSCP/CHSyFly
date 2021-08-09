@@ -24,6 +24,10 @@ public class DriveIOReal implements DriveIO {
         imu = new PigeonIMU(pigeonTalon);
 
         configControllers();
+        //leftMain.burnFlash();
+        //leftFollow.burnFlash();
+        //rightMain.burnFlash();
+        //rightFollow.burnFlash();
     }
 
     @Override
@@ -34,6 +38,8 @@ public class DriveIOReal implements DriveIO {
         leftMain.setInverted(true);
         leftPID.setP(Constants.kDriveKp);
         rightPID.setP(Constants.kDriveKp);
+        leftMain.setSmartCurrentLimit(40);
+        rightMain.setSmartCurrentLimit(40);
     }
 
     @Override
